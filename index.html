@@ -74,16 +74,16 @@
 <body class="dark bg-slate-950 text-slate-100 min-h-screen selection:bg-indigo-500 selection:text-white">
 
     <!-- 초기 진입 시 비밀번호 보호 레이어 (관리자 전용) -->
-    <div id="admin-gate" class="fixed inset-0 z-[100] bg-slate-950 flex items-center justify-center p-6 hidden">
+    <div id="admin-gate" class="fixed inset-0 z-[100] bg-slate-950 flex items-center justify-center p-6">
         <div class="max-w-sm w-full text-center animate-slide-up">
             <div class="w-20 h-20 bg-indigo-600/20 text-indigo-500 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-indigo-500/20">
                 <i data-lucide="shield-check" class="w-10 h-10"></i>
             </div>
-            <h2 class="text-3xl font-black text-white mb-2">VIBE PORTFOLIO</h2>
-            <p class="text-slate-500 mb-8 text-sm">관리자 비밀번호를 입력하여 접속하세요.</p>
+            <h2 class="text-3xl font-black text-white mb-2 uppercase tracking-tighter">Vibe Portfolio</h2>
+            <p class="text-slate-500 mb-8 text-sm">관리자 비밀번호를 입력하세요.</p>
             <input type="password" id="gate-password-input" placeholder="••••" class="w-full px-6 py-5 rounded-2xl border-2 border-slate-800 bg-slate-900 text-white text-center text-2xl tracking-[0.5em] outline-none focus:border-indigo-500 transition-all mb-6 font-bold">
             <button id="gate-confirm-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-5 rounded-2xl transition-all active:scale-95 uppercase tracking-tighter shadow-lg shadow-indigo-500/20">
-                인증 및 접속
+                관리자 접속
             </button>
         </div>
     </div>
@@ -117,7 +117,7 @@
                     <span id="mode-text">관리자</span>
                 </div>
 
-                <div class="h-6 w-[1px] bg-slate-800/50 dark:bg-slate-800 light:bg-slate-200 mx-1"></div>
+                <div id="header-divider" class="h-6 w-[1px] bg-slate-800/50 dark:bg-slate-800 light:bg-slate-200 mx-1"></div>
 
                 <button id="theme-toggle" class="p-2.5 rounded-xl transition-all border border-transparent hover:border-slate-700/50 hover:bg-slate-800/50 dark:text-slate-400 light:text-slate-600">
                     <i id="theme-icon" data-lucide="sun" class="w-5 h-5"></i>
@@ -150,7 +150,7 @@
         <div id="empty-state" class="hidden flex flex-col items-center justify-center py-32 rounded-[3rem] border-2 border-dashed border-slate-800/50 bg-slate-900/10 transition-colors mt-12">
             <i data-lucide="layout-grid" class="w-10 h-10 text-slate-500 mb-6"></i>
             <h3 class="text-2xl font-bold mb-3 tracking-tight text-white dark:text-white light:text-slate-900">아직 등록된 게임이 없습니다</h3>
-            <p class="text-slate-500 mb-10 text-center">관리자 모드에서 새로운 프로젝트를 추가해 보세요.</p>
+            <p class="text-slate-500 mb-10 text-center">관리자 권한으로 새로운 프로젝트를 추가해 보세요.</p>
         </div>
     </main>
 
@@ -169,7 +169,7 @@
         </div>
     </footer>
 
-    <!-- 모달: 게임 추가/수정 -->
+    <!-- 모달: 프로젝트 추가/수정 -->
     <div id="add-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-6">
         <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity" onclick="toggleModal('add-modal', false)"></div>
         <div id="modal-box" class="relative w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden p-10 animate-slide-up bg-slate-900 border border-white/10">
@@ -217,9 +217,9 @@
     </div>
 
     <script>
-        // --- 보안 설정 ---
-        const ADMIN_PASSWORD = "9823";
-        
+        // --- 핵심 보안 설정 ---
+        const ADMIN_PASSWORD = "9823"; 
+
         const INITIAL_GAMES = [
             {
                 id: "vibe-rush-fixed",
@@ -233,11 +233,11 @@
         let gamesList = [];
         let pendingDeleteId = null;
         let isDarkMode = true;
-        let isOwnerMode = true; // 기본값: 관리자 모드 (게이트에서 검증)
-        let isForcedVisitor = false; // 방문자 전용 링크 접속 여부
+        let isOwnerMode = true; 
+        let isForcedVisitor = false; 
 
         const loadGames = () => {
-            const saved = localStorage.getItem('vibe_portfolio_secure_v9');
+            const saved = localStorage.getItem('vibe_portfolio_secure_final');
             if (saved) {
                 const savedGames = JSON.parse(saved);
                 const combined = [...INITIAL_GAMES];
@@ -252,7 +252,7 @@
         };
 
         const saveToLocal = () => {
-            localStorage.setItem('vibe_portfolio_secure_v9', JSON.stringify(gamesList));
+            localStorage.setItem('vibe_portfolio_secure_final', JSON.stringify(gamesList));
             renderGames();
         };
 
@@ -273,7 +273,19 @@
             else { modal.classList.add('hidden'); modal.classList.remove('flex'); }
         };
 
-        // 방문자 전용 링크 복사
+        // 관리자 인증 로직
+        document.getElementById('gate-confirm-btn').onclick = () => {
+            const input = document.getElementById('gate-password-input').value;
+            if (input === ADMIN_PASSWORD) {
+                document.getElementById('admin-gate').style.display = "none";
+                showToast("관리자 인증 성공!");
+                loadGames();
+            } else {
+                showToast("비밀번호가 올바르지 않습니다.", "error");
+            }
+        };
+
+        // 공유 링크 복사 (방문자 모드 강제 주소)
         document.getElementById('share-link-btn').onclick = () => {
             const visitorUrl = window.location.origin + window.location.pathname + "?visitor=true";
             const dummy = document.createElement("input");
@@ -282,46 +294,28 @@
             dummy.select();
             document.execCommand('copy');
             document.body.removeChild(dummy);
-            showToast("방문자용 공유 링크가 복사되었습니다!");
-        };
-
-        // 관리자 게이트 로직
-        document.getElementById('gate-confirm-btn').onclick = () => {
-            const input = document.getElementById('gate-password-input').value;
-            if (input === ADMIN_PASSWORD) {
-                document.getElementById('admin-gate').style.display = "none";
-                showToast("관리자 인증 성공!");
-                loadGames();
-            } else {
-                showToast("비밀번호가 틀렸습니다.", "error");
-            }
+            showToast("공유용 방문자 링크가 복사되었습니다!");
         };
 
         const updateModeUI = () => {
-            const modeIcon = document.getElementById('mode-icon');
-            const modeText = document.getElementById('mode-text');
             const headerAddBtn = document.getElementById('header-add-btn');
             const shareBtn = document.getElementById('share-link-btn');
-            const emptyAddBtn = document.getElementById('empty-add-btn');
             const badge = document.getElementById('mode-badge');
+            const divider = document.getElementById('header-divider');
 
             if (isForcedVisitor) {
-                // ⚠️ 핵심: 방문자 링크 접속 시 모든 편집/관리 UI 완전 제거 ⚠️
                 if(badge) badge.style.display = "none";
                 if(shareBtn) shareBtn.style.display = "none";
                 if(headerAddBtn) headerAddBtn.style.display = "none";
-                if(emptyAddBtn) emptyAddBtn.style.display = "none";
-                document.getElementById('header-divider').style.display = "none";
+                if(divider) divider.style.display = "none";
                 return;
             }
 
-            // 관리자 모드일 때만 버튼 노출
             headerAddBtn.style.display = isOwnerMode ? "flex" : "none";
-            if(emptyAddBtn) emptyAddBtn.style.display = isOwnerMode ? "block" : "none";
             lucide.createIcons();
         };
 
-        // 테마 토글 (완벽 연동)
+        // 테마 토글
         document.getElementById('theme-toggle').onclick = () => {
             isDarkMode = !isDarkMode;
             const body = document.body;
@@ -334,7 +328,6 @@
             const title = document.getElementById('main-title');
             const subtitle = document.getElementById('hero-subtitle');
             const icon = document.getElementById('theme-icon');
-            const copy = document.getElementById('copyright');
 
             if (isDarkMode) {
                 body.className = "dark bg-slate-950 text-slate-100 min-h-screen";
@@ -352,7 +345,6 @@
                 title.className = "text-5xl md:text-8xl font-black mb-8 tracking-tighter leading-[0.9] neon-text uppercase text-white transition-all duration-300";
                 subtitle.className = "text-lg md:text-xl font-medium text-slate-400 max-w-xl mx-auto leading-relaxed";
                 icon.setAttribute('data-lucide', 'sun');
-                copy.className = "text-[11px] uppercase tracking-[0.3em] text-slate-600 font-black text-white dark:text-slate-600";
             } else {
                 body.className = "light bg-slate-50 text-slate-900 min-h-screen";
                 header.className = "sticky top-0 z-40 w-full border-b backdrop-blur-xl transition-colors duration-300 border-slate-200 bg-white/80";
@@ -369,7 +361,6 @@
                 title.className = "text-5xl md:text-8xl font-black mb-8 tracking-tighter leading-[0.9] uppercase text-slate-900 transition-all duration-300";
                 subtitle.className = "text-lg md:text-xl font-medium text-slate-600 max-w-xl mx-auto leading-relaxed";
                 icon.setAttribute('data-lucide', 'moon');
-                copy.className = "text-[11px] uppercase tracking-[0.3em] font-black text-slate-400";
             }
             lucide.createIcons();
             renderGames();
@@ -450,7 +441,6 @@
             });
             lucide.createIcons();
             
-            // 입력창 스타일 동기화
             const inputs = document.querySelectorAll('input[type="text"], input[type="url"], textarea');
             inputs.forEach(input => {
                 if (isDarkMode) {

@@ -60,7 +60,7 @@
             background-color: rgba(99, 102, 241, 0.1) !important;
         }
 
-        /* 깃허브 페이지용 설정 경고 */
+        /* 설정 안내창 */
         #config-error {
             display: none;
             background: rgba(239, 68, 68, 0.1);
@@ -86,7 +86,7 @@
                 <div class="p-2 bg-indigo-600 rounded-xl">
                     <i data-lucide="gamepad-2" class="text-white w-6 h-6"></i>
                 </div>
-                <h1 class="text-2xl font-bold tracking-tight">Vibe Coding <span class="text-indigo-500 font-black">Portfolio</span></h1>
+                <h1 class="text-2xl font-bold tracking-tight text-white">Vibe Coding <span class="text-indigo-500 font-black">Portfolio</span></h1>
             </div>
             
             <div class="flex items-center gap-4">
@@ -111,16 +111,26 @@
             <p id="hero-subtitle" class="text-lg md:text-xl font-medium text-slate-400">
                 모든 게임들은 Gemini를 이용하여 만들었습니다.
             </p>
+            
             <!-- 설정 에러 메시지 -->
-            <div id="config-error" class="mt-8 p-4 rounded-2xl text-sm font-medium">
-                <p>⚠️ Firebase 설정이 감지되지 않았습니다. 깃허브 페이지에서 사용하려면 코드의 <code class="bg-black/20 px-1 rounded">firebaseConfig</code> 부분을 직접 수정해야 합니다.</p>
+            <div id="config-error" class="mt-8 p-6 rounded-[2rem] text-sm text-left max-w-xl mx-auto">
+                <div class="flex items-center gap-3 mb-3">
+                    <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                    <span class="font-bold">Firebase 설정이 필요합니다!</span>
+                </div>
+                <p class="mb-4 leading-relaxed">깃허브 페이지에서 사용하시려면 별도의 Firebase 프로젝트를 생성하고 설정을 코드에 직접 입력해야 합니다.</p>
+                <ol class="list-decimal list-inside space-y-1 text-xs opacity-80 text-slate-300">
+                    <li>Firebase Console에서 프로젝트 생성</li>
+                    <li>웹 앱을 추가하고 <code class="bg-black/20 p-1">firebaseConfig</code> 복사</li>
+                    <li>코드 상단의 <code class="bg-black/20 p-1">myPersonalConfig</code> 변수에 붙여넣기</li>
+                </ol>
             </div>
         </section>
 
         <!-- 로딩 상태 -->
         <div id="loading-state" class="flex flex-col justify-center items-center h-64 gap-4">
             <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-            <p class="text-sm font-medium animate-pulse text-slate-400">게임을 불러오고 있습니다...</p>
+            <p class="text-sm font-medium animate-pulse text-slate-400">서버에 연결하고 있습니다...</p>
         </div>
 
         <!-- 비어있는 상태 -->
@@ -128,7 +138,7 @@
             <div class="p-5 bg-slate-500/10 rounded-full mb-6">
                 <i data-lucide="layout-grid" class="w-12 h-12 text-slate-500 opacity-50"></i>
             </div>
-            <h3 class="text-2xl font-bold mb-2">아직 등록된 게임이 없습니다</h3>
+            <h3 class="text-2xl font-bold mb-2 text-white">아직 등록된 게임이 없습니다</h3>
             <p class="text-slate-500 mb-8 max-w-xs text-center">나만의 멋진 게임들을 등록하고 동료들에게 자랑해 보세요!</p>
             <button onclick="toggleModal('add-modal', true)" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-4 rounded-2xl font-bold transition-all shadow-xl shadow-indigo-500/20 active:scale-95">
                 <i data-lucide="plus-circle" class="w-5 h-5"></i> 지금 바로 시작하기
@@ -137,7 +147,6 @@
 
         <!-- 게임 그리드 -->
         <div id="game-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            <!-- 게임 카드가 여기에 삽입됩니다 -->
         </div>
     </main>
 
@@ -149,7 +158,7 @@
                     <i data-lucide="gamepad-2" class="text-white w-6 h-6"></i>
                 </div>
             </div>
-            <p class="font-bold mb-2">VIBE CODING GAMES</p>
+            <p class="font-bold mb-2 text-white">VIBE CODING GAMES</p>
             <p class="text-sm text-slate-500">
                 © <span id="current-year"></span> Created with passion using Gemini
             </p>
@@ -157,53 +166,44 @@
     </footer>
 
     <!-- 모달 -->
-    <!-- 1. 게임 추가 모달 -->
     <div id="add-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-950/70 backdrop-blur-md" onclick="toggleModal('add-modal', false)"></div>
         <div class="relative w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden bg-slate-900 border border-slate-800 modal-content transition-colors">
             <div class="p-8 pb-4 flex justify-between items-center">
-                <h3 class="text-2xl font-black">새로운 도전 등록</h3>
-                <button onclick="toggleModal('add-modal', false)" class="p-2 rounded-full hover:bg-slate-800 transition-colors">
+                <h3 class="text-2xl font-black text-white">새로운 도전 등록</h3>
+                <button onclick="toggleModal('add-modal', false)" class="p-2 rounded-full hover:bg-slate-800 transition-colors text-white">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
-
             <form id="add-game-form" class="p-8 pt-4 space-y-6">
                 <div class="space-y-2">
                     <label class="text-xs font-black uppercase tracking-widest text-indigo-500">게임 프로젝트 명</label>
                     <input type="text" id="form-title" required placeholder="예: 갤럭시 디펜더" class="w-full px-5 py-4 rounded-2xl border-2 outline-none transition-all bg-slate-800 border-slate-700 text-white focus:border-indigo-500">
                 </div>
-
                 <div class="space-y-2">
                     <label class="text-xs font-black uppercase tracking-widest text-indigo-500">플레이 링크 (URL)</label>
                     <input type="url" id="form-url" required placeholder="https://..." class="w-full px-5 py-4 rounded-2xl border-2 outline-none transition-all bg-slate-800 border-slate-700 text-white focus:border-indigo-500">
                 </div>
-
                 <div class="space-y-2">
                     <label class="text-xs font-black uppercase tracking-widest text-indigo-500">핵심 설명</label>
                     <textarea id="form-description" rows="2" placeholder="무엇을 하는 게임인가요?" class="w-full px-5 py-4 rounded-2xl border-2 outline-none transition-all bg-slate-800 border-slate-700 text-white focus:border-indigo-500 resize-none"></textarea>
                 </div>
-
-                <!-- 이미지 드래그 앤 드롭 영역 -->
                 <div class="space-y-2">
-                    <label class="text-xs font-black uppercase tracking-widest text-indigo-500">대표 이미지 (PNG 업로드)</label>
+                    <label class="text-xs font-black uppercase tracking-widest text-indigo-500">대표 이미지 (드래그 앤 드롭)</label>
                     <div id="drop-zone" class="relative group cursor-pointer border-2 border-dashed border-slate-700 rounded-2xl p-6 transition-all hover:border-indigo-500 bg-slate-800/50 text-center">
                         <input type="file" id="file-input" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                         <div id="drop-zone-content">
                             <i data-lucide="image-plus" class="w-10 h-10 mx-auto mb-2 text-slate-500 group-hover:text-indigo-500 transition-colors"></i>
-                            <p class="text-sm font-medium text-slate-400 group-hover:text-slate-200">이미지를 여기에 끌어다 놓거나 클릭하세요</p>
-                            <p class="text-[10px] text-slate-500 mt-1 italic">PNG, JPG, GIF 지원 (최대 1MB)</p>
+                            <p class="text-sm text-slate-400 group-hover:text-slate-200 transition-colors">이미지 파일을 선택하세요</p>
                         </div>
-                        <!-- 이미지 미리보기 영역 -->
                         <div id="preview-container" class="hidden relative aspect-video w-full rounded-xl overflow-hidden mt-2">
                             <img id="image-preview" src="" alt="미리보기" class="w-full h-full object-cover">
-                            <button type="button" id="remove-image" class="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600">
+                            <button type="button" id="remove-image" class="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition-colors">
                                 <i data-lucide="x" class="w-4 h-4"></i>
                             </button>
                         </div>
                     </div>
                 </div>
-
                 <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-5 rounded-[1.5rem] transition-all shadow-xl shadow-indigo-500/30 active:scale-95">
                     포트폴리오에 등록
                 </button>
@@ -211,53 +211,59 @@
         </div>
     </div>
 
-    <!-- 2. 삭제 확인 모달 -->
     <div id="delete-modal" class="fixed inset-0 z-[60] hidden items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" onclick="toggleModal('delete-modal', false)"></div>
         <div class="relative w-full max-w-sm rounded-[2rem] p-8 text-center bg-slate-900 border border-slate-800">
             <div class="w-16 h-16 bg-red-500/20 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
                 <i data-lucide="trash-2" class="w-8 h-8"></i>
             </div>
-            <h3 class="text-xl font-bold mb-2">정말 삭제할까요?</h3>
-            <p class="text-sm mb-8 text-slate-400">
-                등록된 게임 정보가 영구적으로 삭제됩니다.<br/>이 작업은 되돌릴 수 없습니다.
-            </p>
+            <h3 class="text-xl font-bold mb-2 text-white">정말 삭제할까요?</h3>
+            <p class="text-sm mb-8 text-slate-400">등록된 게임 정보가 영구적으로 삭제됩니다.</p>
             <div class="flex gap-3">
-                <button onclick="toggleModal('delete-modal', false)" class="flex-1 py-4 rounded-2xl font-bold bg-slate-800 hover:bg-slate-700 transition-colors text-white">
-                    취소
-                </button>
-                <button id="confirm-delete-btn" class="flex-1 py-4 rounded-2xl font-bold bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/30 active:scale-95 transition-all">
-                    삭제하기
-                </button>
+                <button onclick="toggleModal('delete-modal', false)" class="flex-1 py-4 rounded-2xl font-bold bg-slate-800 text-white hover:bg-slate-700 transition-colors">취소</button>
+                <button id="confirm-delete-btn" class="flex-1 py-4 rounded-2xl font-bold bg-red-500 text-white hover:bg-red-600 transition-colors shadow-lg shadow-red-500/20">삭제하기</button>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDK Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
-        // --- Firebase 설정 안전하게 불러오기 ---
+        // --- 중요: 깃허브 페이지에서 사용 시 아래 설정을 자신의 것으로 교체하세요 ---
+        const myPersonalConfig = {
+          apiKey: "본인의_API_KEY",
+          authDomain: "본인의_PROJECT_ID.firebaseapp.com",
+          projectId: "본인의_PROJECT_ID",
+          storageBucket: "본인의_PROJECT_ID.appspot.com",
+          messagingSenderId: "본인의_SENDER_ID",
+          appId: "본인의_APP_ID"
+        };
+
         let firebaseConfig;
         try {
-            firebaseConfig = typeof __firebase_config !== 'undefined' 
-                ? JSON.parse(__firebase_config) 
-                : null;
+            if (myPersonalConfig.apiKey !== "본인의_API_KEY") {
+                firebaseConfig = myPersonalConfig;
+            } 
+            else if (typeof __firebase_config !== 'undefined') {
+                firebaseConfig = JSON.parse(__firebase_config);
+            } 
+            else {
+                firebaseConfig = null;
+            }
         } catch (e) {
-            console.error("Firebase config parse error", e);
+            console.error("Firebase Config Error", e);
+            firebaseConfig = null;
         }
         
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'vibe-games-portfolio-default';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'vibe-portfolio-github';
         const loadingState = document.getElementById('loading-state');
         const configError = document.getElementById('config-error');
 
-        // 설정이 없는 경우 무한 로딩 방지
         if (!firebaseConfig) {
             loadingState.classList.add('hidden');
             configError.style.display = 'block';
-            console.error("Firebase Configuration is missing! Please provide your config.");
         } else {
             initApp();
         }
@@ -273,145 +279,86 @@
             let unsubscribeGames = null;
             let currentThumbnailBase64 = null;
 
-            // --- 헬퍼 함수 ---
+            // 헬퍼: 토스트
             const showToast = (message, type = 'success') => {
                 const toast = document.getElementById('toast');
-                const toastContent = document.getElementById('toast-content');
                 const toastMessage = document.getElementById('toast-message');
-                const toastIcon = document.getElementById('toast-icon');
-
                 toastMessage.textContent = message;
-                if (type === 'error') {
-                    toastContent.className = 'px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 backdrop-blur-lg border bg-red-500/90 border-red-400 text-white';
-                    toastIcon.setAttribute('data-lucide', 'alert-triangle');
-                } else {
-                    toastContent.className = 'px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 backdrop-blur-lg border bg-indigo-600/90 border-indigo-400 text-white';
-                    toastIcon.setAttribute('data-lucide', 'check-circle-2');
-                }
-                lucide.createIcons();
-                
                 toast.classList.remove('hidden');
                 setTimeout(() => toast.classList.add('hidden'), 3000);
             };
 
+            // 헬퍼: 모달
             const toggleModal = (id, show) => {
                 const modal = document.getElementById(id);
-                if (show) {
-                    modal.classList.remove('hidden');
-                    modal.classList.add('flex');
-                } else {
-                    modal.classList.add('hidden');
-                    modal.classList.remove('flex');
-                    if (id === 'add-modal') resetThumbnail();
-                }
+                if (show) { modal.classList.remove('hidden'); modal.classList.add('flex'); }
+                else { modal.classList.add('hidden'); modal.classList.remove('flex'); if(id==='add-modal') resetThumbnail(); }
             };
             window.toggleModal = toggleModal;
 
-            // --- 테마 토글 ---
-            const toggleTheme = () => {
+            // 테마 토글
+            document.getElementById('theme-toggle').onclick = () => {
                 isDarkMode = !isDarkMode;
                 document.body.classList.toggle('dark', isDarkMode);
-                const themeToggle = document.getElementById('theme-toggle');
-                const themeIcon = document.getElementById('theme-icon');
-                
-                if (isDarkMode) {
-                    document.body.className = 'dark bg-slate-950 text-slate-100 min-h-screen';
-                    themeIcon.setAttribute('data-lucide', 'sun');
-                } else {
-                    document.body.className = 'bg-slate-50 text-slate-900 min-h-screen';
-                    themeIcon.setAttribute('data-lucide', 'moon');
-                }
+                document.getElementById('theme-icon').setAttribute('data-lucide', isDarkMode ? 'sun' : 'moon');
                 lucide.createIcons();
-                renderGames(); 
+                renderGames();
             };
-            document.getElementById('theme-toggle').onclick = toggleTheme;
 
-            // --- 이미지 업로드 ---
+            // 이미지 업로드 핸들러
             const dropZone = document.getElementById('drop-zone');
             const fileInput = document.getElementById('file-input');
             const previewContainer = document.getElementById('preview-container');
             const imagePreview = document.getElementById('image-preview');
             const dropZoneContent = document.getElementById('drop-zone-content');
-            const removeImageBtn = document.getElementById('remove-image');
 
             const handleFile = (file) => {
-                if (!file || !file.type.startsWith('image/')) return showToast("이미지 파일만 가능합니다.", "error");
-                if (file.size > 1024 * 1024) return showToast("최대 1MB까지만 가능합니다.", "error");
-
+                if (!file || !file.type.startsWith('image/')) return showToast("이미지 파일만 선택하세요.", "error");
+                if (file.size > 1024 * 1024) return showToast("1MB 이하 파일만 가능합니다.", "error");
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     currentThumbnailBase64 = e.target.result;
                     imagePreview.src = currentThumbnailBase64;
                     previewContainer.classList.remove('hidden');
                     dropZoneContent.classList.add('hidden');
-                    dropZone.classList.remove('border-dashed');
                 };
                 reader.readAsDataURL(file);
             };
-
             const resetThumbnail = () => {
-                currentThumbnailBase64 = null;
-                imagePreview.src = '';
-                previewContainer.classList.add('hidden');
-                dropZoneContent.classList.remove('hidden');
-                dropZone.classList.add('border-dashed');
-                fileInput.value = '';
+                currentThumbnailBase64 = null; fileInput.value = '';
+                previewContainer.classList.add('hidden'); dropZoneContent.classList.remove('hidden');
             };
+            fileInput.onchange = (e) => handleFile(e.target.files[0]);
+            document.getElementById('remove-image').onclick = (e) => { e.stopPropagation(); resetThumbnail(); };
+            dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('drop-zone--active'); };
+            dropZone.ondragleave = () => dropZone.classList.remove('drop-zone--active');
+            dropZone.ondrop = (e) => { e.preventDefault(); dropZone.classList.remove('drop-zone--active'); handleFile(e.dataTransfer.files[0]); };
 
-            fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
-            removeImageBtn.addEventListener('click', (e) => { e.stopPropagation(); resetThumbnail(); });
-            dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drop-zone--active'); });
-            dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drop-zone--active'));
-            dropZone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                dropZone.classList.remove('drop-zone--active');
-                handleFile(e.dataTransfer.files[0]);
-            });
-
-            // --- 렌더링 ---
+            // 렌더링 함수
             const renderGames = () => {
                 const grid = document.getElementById('game-grid');
-                const empty = document.getElementById('empty-state');
                 loadingState.classList.add('hidden');
                 grid.innerHTML = '';
-
-                if (gamesList.length === 0) {
-                    empty.classList.remove('hidden');
-                    return;
-                }
-                empty.classList.add('hidden');
+                if (gamesList.length === 0) { document.getElementById('empty-state').classList.remove('hidden'); return; }
+                document.getElementById('empty-state').classList.add('hidden');
                 
                 gamesList.forEach(game => {
                     const card = document.createElement('div');
-                    card.className = `group relative flex flex-col h-full overflow-hidden rounded-[2.5rem] border transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl animate-fade-in ${
-                        isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
-                    }`;
-
-                    const thumbnailHtml = game.thumbnail 
-                        ? `<img src="${game.thumbnail}" alt="${game.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">`
-                        : `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-950 to-slate-900"><i data-lucide="gamepad-2" class="w-20 h-20 text-indigo-500/30"></i></div>`;
-
+                    card.className = `group relative flex flex-col h-full overflow-hidden rounded-[2.5rem] border transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl animate-fade-in ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`;
+                    const thumb = game.thumbnail ? `<img src="${game.thumbnail}" class="w-full h-full object-cover transition-transform group-hover:scale-110">` : `<div class="w-full h-full flex items-center justify-center bg-indigo-950"><i data-lucide="gamepad-2" class="w-16 h-16 text-indigo-500/20"></i></div>`;
                     card.innerHTML = `
-                        <div class="aspect-video w-full overflow-hidden bg-slate-800 relative">
-                            ${thumbnailHtml}
-                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                <a href="${game.url}" target="_blank" class="bg-white text-indigo-600 px-6 py-3 rounded-xl font-bold flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                    <i data-lucide="monitor" class="w-5 h-5"></i> 시작하기
-                                </a>
+                        <div class="aspect-video w-full overflow-hidden relative">
+                            ${thumb}
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <a href="${game.url}" target="_blank" class="bg-white text-indigo-600 px-6 py-3 rounded-xl font-bold flex items-center gap-2">플레이</a>
                             </div>
-                            <div class="absolute top-5 right-5 z-10">
-                                <button onclick="confirmDelete('${game.id}')" class="p-3 bg-red-500 hover:bg-red-600 text-white rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-300">
-                                    <i data-lucide="trash-2" class="w-5 h-5"></i>
-                                </button>
-                            </div>
+                            <button onclick="confirmDelete('${game.id}')" class="absolute top-4 right-4 p-2 bg-red-500 text-white rounded-xl opacity-0 group-hover:opacity-100 transition-opacity">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
                         </div>
-                        <div class="p-8 flex-grow flex flex-col">
-                            <h3 class="text-2xl font-black mb-3 line-clamp-1">${game.title}</h3>
-                            <p class="text-base line-clamp-2 h-12 mb-6 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}">${game.description || '설명이 없습니다.'}</p>
-                            <div class="mt-auto pt-6 flex items-center justify-between border-t border-slate-800/10">
-                                <span class="text-xs font-bold uppercase tracking-widest text-indigo-500">Active Game</span>
-                                <a href="${game.url}" target="_blank" class="text-indigo-400"><i data-lucide="external-link" class="w-5 h-5"></i></a>
-                            </div>
+                        <div class="p-8 flex flex-col h-full">
+                            <h3 class="text-xl font-black mb-2 text-white dark:text-white ${!isDarkMode ? 'text-slate-900' : ''}">${game.title}</h3>
+                            <p class="text-sm line-clamp-2 h-10 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}">${game.description || ''}</p>
                         </div>
                     `;
                     grid.appendChild(card);
@@ -419,66 +366,73 @@
                 lucide.createIcons();
             };
 
-            // --- 데이터 조작 ---
+            // 데이터 조작
             window.confirmDelete = (id) => { pendingDeleteId = id; toggleModal('delete-modal', true); };
-
             document.getElementById('confirm-delete-btn').onclick = async () => {
-                if (!pendingDeleteId) return;
-                try {
-                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'games', pendingDeleteId));
-                    showToast("삭제되었습니다.");
-                    toggleModal('delete-modal', false);
-                } catch (e) { showToast("삭제 실패", "error"); }
+                if (!auth.currentUser) return;
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'games', pendingDeleteId));
+                toggleModal('delete-modal', false);
             };
-
             document.getElementById('add-game-form').onsubmit = async (e) => {
                 e.preventDefault();
-                const title = document.getElementById('form-title').value;
-                const url = document.getElementById('form-url').value;
-                const description = document.getElementById('form-description').value;
-
-                try {
-                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'games'), {
-                        title, url, description, thumbnail: currentThumbnailBase64, createdAt: new Date().toISOString()
-                    });
-                    e.target.reset();
-                    toggleModal('add-modal', false);
-                    showToast("추가 완료!");
-                } catch (e) { showToast("등록 실패", "error"); }
+                if (!auth.currentUser) {
+                    showToast("인증 중입니다. 잠시만 기다려주세요.", "error");
+                    return;
+                }
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'games'), {
+                    title: document.getElementById('form-title').value,
+                    url: document.getElementById('form-url').value,
+                    description: document.getElementById('form-description').value,
+                    thumbnail: currentThumbnailBase64,
+                    createdAt: new Date().toISOString()
+                });
+                toggleModal('add-modal', false);
+                showToast("게임이 성공적으로 등록되었습니다!");
             };
 
-            // --- 인증 및 구독 ---
+            // --- 수정된 인증 및 구독 흐름 (Rule 3 준수) ---
             const startAuth = async () => {
                 try {
+                    // Canvas 환경의 커스텀 토큰 우선 처리
                     if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                         await signInWithCustomToken(auth, __initial_auth_token);
                     } else {
+                        // 깃허브 등 외부 환경용 익명 인증
                         await signInAnonymously(auth);
                     }
                 } catch (err) {
-                    console.error("Auth failed", err);
+                    console.error("Auth initialization failed:", err);
                     loadingState.classList.add('hidden');
-                    showToast("서버 연결 실패", "error");
+                    showToast("서버 연결에 실패했습니다.", "error");
                 }
             };
 
             onAuthStateChanged(auth, (user) => {
                 if (user) {
+                    // 인증 완료 후 데이터 구독 시작
                     if (unsubscribeGames) unsubscribeGames();
-                    unsubscribeGames = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'games'), (snap) => {
-                        gamesList = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                        gamesList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                        renderGames();
-                    }, (err) => {
-                        console.error("Snapshot error", err);
-                        loadingState.classList.add('hidden');
-                    });
+                    
+                    const gamesRef = collection(db, 'artifacts', appId, 'public', 'data', 'games');
+                    unsubscribeGames = onSnapshot(gamesRef, 
+                        (snap) => {
+                            gamesList = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+                            renderGames();
+                        },
+                        (error) => {
+                            console.error("Firestore Permission Denied:", error);
+                            // 권한 에러 발생 시 사용자에게 알림 (익명 인증이 비활성화되어 있을 수 있음)
+                            if (error.code === 'permission-denied') {
+                                loadingState.classList.add('hidden');
+                                showToast("데이터 접근 권한이 없습니다. Firebase 설정을 확인하세요.", "error");
+                            }
+                        }
+                    );
                 }
             });
 
+            // 인증 프로세스 실행
             startAuth();
         }
-
         document.getElementById('current-year').textContent = new Date().getFullYear();
         lucide.createIcons();
     </script>

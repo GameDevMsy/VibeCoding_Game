@@ -3,218 +3,426 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibe Coding Portfolio</title>
-    
-    <!-- Tailwind CSS CDN -->
+    <title>VIBE CODING GAMES - Portfolio</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- React & ReactDOM CDN -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    
-    <!-- Babel for JSX -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap');
+        
+        body {
+            font-family: 'Pretendard', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
         .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;  
+            -webkit-box-orient: vertical;
             overflow: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease forwards;
         }
     </style>
 </head>
-<body>
-    <div id="root"></div>
+<body class="dark bg-slate-950 text-slate-100 min-h-screen">
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 z-[100] hidden">
+        <div id="toast-content" class="px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 backdrop-blur-lg border bg-indigo-600/90 border-indigo-400 text-white">
+            <i id="toast-icon" data-lucide="check-circle-2" class="w-5 h-5"></i>
+            <span id="toast-message" class="font-bold"></span>
+        </div>
+    </div>
 
-        // Lucide 아이콘 컴포넌트 래퍼
-        const Icon = ({ name, size = 20, className = "" }) => {
-            const iconRef = React.useRef(null);
-            useEffect(() => {
-                if (lucide.icons[name]) {
-                    const iconElement = lucide.createIcons({
-                        icons: { [name]: lucide.icons[name] },
-                        attrs: { strokeWidth: 2, size, class: className }
-                    });
-                }
-            }, [name, size, className]);
-            return <i data-lucide={name} className={className} style={{width: size, height: size}}></i>;
-        };
-
-        const App = () => {
-            const [isDarkMode, setIsDarkMode] = useState(true);
-            const [isModalOpen, setIsModalOpen] = useState(false);
-            const [isLoading, setIsLoading] = useState(false); // 데모를 위해 false로 설정
-            const [games, setGames] = useState([]);
-            
-            const [newGame, setNewGame] = useState({
-                title: '', url: '', description: '', thumbnail: ''
-            });
-
-            // 다크모드 토글
-            const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
-
-            const handleInputChange = (e) => {
-                const { name, value } = e.target;
-                setNewGame(prev => ({ ...prev, [name]: value }));
-            };
-
-            const handleAddGame = (e) => {
-                e.preventDefault();
-                const gameToAdd = {
-                    ...newGame,
-                    id: Date.now().toString(),
-                    createdAt: new Date().toISOString()
-                };
-                setGames([gameToAdd, ...games]);
-                setNewGame({ title: '', url: '', description: '', thumbnail: '' });
-                setIsModalOpen(false);
-            };
-
-            const handleDeleteGame = (id) => {
-                if (window.confirm("정말로 이 게임을 삭제하시겠습니까?")) {
-                    setGames(games.filter(game => game.id !== id));
-                }
-            };
-
-            return (
-                <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'}`}>
-                    
-                    {/* Header */}
-                    <header className={`sticky top-0 z-40 w-full border-b backdrop-blur-md ${isDarkMode ? 'border-slate-800 bg-slate-950/80' : 'border-slate-200 bg-white/80'}`}>
-                        <div className="container mx-auto px-6 h-20 flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 bg-indigo-600 rounded-xl flex items-center justify-center">
-                                    <Icon name="Gamepad2" className="text-white" />
-                                </div>
-                                <h1 className="text-2xl font-bold tracking-tight">Vibe Coding <span className="text-indigo-500">Portfolio</span></h1>
-                            </div>
-                            
-                            <div className="flex items-center gap-4">
-                                <button onClick={toggleDarkMode} className={`p-2.5 rounded-full transition-all ${isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-slate-200 hover:bg-slate-300'}`}>
-                                    {isDarkMode ? <Icon name="Sun" /> : <Icon name="Moon" />}
-                                </button>
-                                <button onClick={() => setIsModalOpen(true)} className="hidden md:flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-lg shadow-indigo-500/20">
-                                    <Icon name="Plus" /> 게임 추가하기
-                                </button>
-                                <button onClick={() => setIsModalOpen(true)} className="md:hidden p-2.5 bg-indigo-600 text-white rounded-full">
-                                    <Icon name="Plus" />
-                                </button>
-                            </div>
-                        </div>
-                    </header>
-
-                    {/* Main Content */}
-                    <main className="container mx-auto px-6 py-12">
-                        <section className="mb-16 text-center max-w-2xl mx-auto">
-                            <h2 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight uppercase">Vibe Coding Games</h2>
-                            <p className={`text-lg font-medium ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
-                                모든 게임들은 Gemini를 이용하여 만들었습니다.
-                            </p>
-                        </section>
-
-                        {isLoading ? (
-                            <div className="flex justify-center items-center h-64">
-                                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-                            </div>
-                        ) : games.length === 0 ? (
-                            <div className={`flex flex-col items-center justify-center py-20 px-6 border-2 border-dashed rounded-3xl ${isDarkMode ? 'border-slate-800 bg-slate-900/50' : 'border-slate-200 bg-slate-100/50'}`}>
-                                <Icon name="LayoutGrid" size={64} className="text-slate-500 mb-4 opacity-50" />
-                                <h3 className="text-xl font-semibold mb-2">아직 등록된 게임이 없습니다.</h3>
-                                <p className="text-slate-500 mb-6">첫 번째 게임을 추가하여 포트폴리오를 시작해 보세요!</p>
-                                <button onClick={() => setIsModalOpen(true)} className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl font-bold transition-all">
-                                    <Icon name="PlusCircle" /> 지금 추가하기
-                                </button>
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                {games.map((game) => (
-                                    <div key={game.id} className={`group relative overflow-hidden rounded-3xl border transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${isDarkMode ? 'bg-slate-900 border-slate-800 hover:shadow-indigo-500/10' : 'bg-white border-slate-200 hover:shadow-slate-300/50'}`}>
-                                        <div className="aspect-video w-full overflow-hidden bg-slate-800 relative">
-                                            {game.thumbnail ? (
-                                                <img src={game.thumbnail} alt={game.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-900 to-slate-900">
-                                                    <Icon name="Gamepad2" size={64} className="text-white/20" />
-                                                </div>
-                                            )}
-                                            <div className="absolute top-4 right-4 flex gap-2 translate-y-[-50px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                                                <button onClick={() => handleDeleteGame(game.id)} className="p-2 bg-red-500/90 hover:bg-red-600 text-white rounded-lg backdrop-blur-sm shadow-lg">
-                                                    <Icon name="Trash2" size={16} />
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div className="p-6">
-                                            <h3 className="text-xl font-bold mb-2 group-hover:text-indigo-500 transition-colors">{game.title}</h3>
-                                            <p className={`text-sm mb-6 line-clamp-2 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>{game.description || '설명이 없습니다.'}</p>
-                                            <div className="flex items-center justify-between">
-                                                <a href={game.url} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-2 text-sm font-bold transition-all px-4 py-2 rounded-lg ${isDarkMode ? 'bg-indigo-600/10 text-indigo-400 hover:bg-indigo-600 hover:text-white' : 'bg-indigo-100 text-indigo-600 hover:bg-indigo-600 hover:text-white'}`}>
-                                                    <Icon name="Monitor" size={16} /> 플레이하기
-                                                </a>
-                                                <a href={game.url} target="_blank" rel="noopener noreferrer" className="p-2 text-slate-500 hover:text-indigo-500 transition-colors">
-                                                    <Icon name="ExternalLink" size={18} />
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </main>
-
-                    <footer className={`mt-20 py-12 border-t ${isDarkMode ? 'border-slate-800 text-slate-500' : 'border-slate-200 text-slate-400'}`}>
-                        <div className="container mx-auto px-6 text-center">
-                            <p>© {new Date().getFullYear()} Vibe Games Studio. Powered by Gemini.</p>
-                        </div>
-                    </footer>
-
-                    {/* Modal */}
-                    {isModalOpen && (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                            <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
-                            <div className={`relative w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden ${isDarkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}`}>
-                                <div className={`p-6 border-b flex justify-between items-center ${isDarkMode ? 'border-slate-800' : 'border-slate-200'}`}>
-                                    <h3 className="text-xl font-bold">새 게임 프로젝트 추가</h3>
-                                    <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
-                                        <Icon name="X" />
-                                    </button>
-                                </div>
-                                <form onSubmit={handleAddGame} className="p-6 space-y-5">
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-bold flex items-center gap-2"><Icon name="Gamepad2" size={16} className="text-indigo-500" /> 게임 제목</label>
-                                        <input type="text" name="title" required value={newGame.title} onChange={handleInputChange} className={`w-full px-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-indigo-500/50 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-slate-50 border-slate-200'}`} placeholder="예: 스페이스 인베이더 2024" />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-bold flex items-center gap-2"><Icon name="ExternalLink" size={16} className="text-indigo-500" /> 게임 URL</label>
-                                        <input type="url" name="url" required value={newGame.url} onChange={handleInputChange} className={`w-full px-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-indigo-500/50 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-slate-50 border-slate-200'}`} placeholder="https://example.com/my-game" />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-bold flex items-center gap-2"><Icon name="Info" size={16} className="text-indigo-500" /> 설명</label>
-                                        <textarea name="description" value={newGame.description} onChange={handleInputChange} rows="3" className={`w-full px-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-slate-50 border-slate-200'}`} placeholder="설명을 적어주세요."></textarea>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-bold flex items-center gap-2"><Icon name="LayoutGrid" size={16} className="text-indigo-500" /> 썸네일 URL</label>
-                                        <input type="url" name="thumbnail" value={newGame.thumbnail} onChange={handleInputChange} className={`w-full px-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-indigo-500/50 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-slate-50 border-slate-200'}`} placeholder="이미지 주소를 입력하세요." />
-                                    </div>
-                                    <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-indigo-500/30 mt-4">컬렉션에 추가하기</button>
-                                </form>
-                            </div>
-                        </div>
-                    )}
+    <!-- Header -->
+    <header class="sticky top-0 z-40 w-full border-b backdrop-blur-md border-slate-800 bg-slate-950/80 transition-colors">
+        <div class="container mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-indigo-600 rounded-xl">
+                    <i data-lucide="gamepad-2" class="text-white w-6 h-6"></i>
                 </div>
-            );
+                <h1 class="text-2xl font-bold tracking-tight">Vibe Coding <span class="text-indigo-500 font-black">Portfolio</span></h1>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button id="theme-toggle" class="p-2.5 rounded-full transition-all bg-slate-800 hover:bg-slate-700 text-yellow-400">
+                    <i id="theme-icon" data-lucide="sun" class="w-5 h-5"></i>
+                </button>
+                <button onclick="toggleModal('add-modal', true)" class="hidden md:flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-lg shadow-indigo-500/20 active:scale-95">
+                    <i data-lucide="plus" class="w-5 h-5"></i> 게임 추가하기
+                </button>
+                <button onclick="toggleModal('add-modal', true)" class="md:hidden p-2.5 bg-indigo-600 text-white rounded-full active:scale-95 shadow-lg">
+                    <i data-lucide="plus" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12">
+        <!-- Intro Section -->
+        <section class="mb-16 text-center max-w-2xl mx-auto">
+            <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tight">VIBE CODING GAMES</h2>
+            <p id="hero-subtitle" class="text-lg md:text-xl font-medium text-slate-400">
+                모든 게임들은 Gemini를 이용하여 만들었습니다.
+            </p>
+        </section>
+
+        <!-- Loading State -->
+        <div id="loading-state" class="flex flex-col justify-center items-center h-64 gap-4">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+            <p class="text-sm font-medium animate-pulse text-slate-400">게임을 불러오고 있습니다...</p>
+        </div>
+
+        <!-- Empty State (Hidden by default) -->
+        <div id="empty-state" class="hidden flex flex-col items-center justify-center py-20 px-6 border-2 border-dashed rounded-[2rem] border-slate-800 bg-slate-900/30">
+            <div class="p-5 bg-slate-500/10 rounded-full mb-6">
+                <i data-lucide="layout-grid" class="w-12 h-12 text-slate-500 opacity-50"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">아직 등록된 게임이 없습니다</h3>
+            <p class="text-slate-500 mb-8 max-w-xs text-center">나만의 멋진 게임들을 등록하고 동료들에게 자랑해 보세요!</p>
+            <button onclick="toggleModal('add-modal', true)" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-4 rounded-2xl font-bold transition-all shadow-xl shadow-indigo-500/20 active:scale-95">
+                <i data-lucide="plus-circle" class="w-5 h-5"></i> 지금 바로 시작하기
+            </button>
+        </div>
+
+        <!-- Game Grid -->
+        <div id="game-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <!-- Cards will be injected here -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-20 py-16 border-t border-slate-900 bg-slate-950 transition-colors">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex justify-center mb-8">
+                <div class="p-3 bg-indigo-600 rounded-2xl">
+                    <i data-lucide="gamepad-2" class="text-white w-6 h-6"></i>
+                </div>
+            </div>
+            <p class="font-bold mb-2">VIBE CODING GAMES</p>
+            <p class="text-sm text-slate-500">
+                © <span id="current-year"></span> Created with passion using Gemini
+            </p>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <!-- 1. Add Game Modal -->
+    <div id="add-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-950/70 backdrop-blur-md" onclick="toggleModal('add-modal', false)"></div>
+        <div class="relative w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden bg-slate-900 border border-slate-800 modal-content transition-colors">
+            <div class="p-8 pb-4 flex justify-between items-center">
+                <h3 class="text-2xl font-black">새로운 도전 등록</h3>
+                <button onclick="toggleModal('add-modal', false)" class="p-2 rounded-full hover:bg-slate-800 transition-colors">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <form id="add-game-form" class="p-8 pt-4 space-y-6">
+                <div class="space-y-2">
+                    <label class="text-xs font-black uppercase tracking-widest text-indigo-500">게임 프로젝트 명</label>
+                    <input type="text" id="form-title" required placeholder="예: 갤럭시 디펜더" class="w-full px-5 py-4 rounded-2xl border-2 outline-none transition-all bg-slate-800 border-slate-700 text-white focus:border-indigo-500">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-black uppercase tracking-widest text-indigo-500">플레이 링크 (URL)</label>
+                    <input type="url" id="form-url" required placeholder="https://..." class="w-full px-5 py-4 rounded-2xl border-2 outline-none transition-all bg-slate-800 border-slate-700 text-white focus:border-indigo-500">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-black uppercase tracking-widest text-indigo-500">핵심 설명</label>
+                    <textarea id="form-description" rows="3" placeholder="무엇을 하는 게임인가요?" class="w-full px-5 py-4 rounded-2xl border-2 outline-none transition-all bg-slate-800 border-slate-700 text-white focus:border-indigo-500 resize-none"></textarea>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-black uppercase tracking-widest text-indigo-500">대표 이미지 (선택사항)</label>
+                    <input type="url" id="form-thumbnail" placeholder="https://... (이미지 주소)" class="w-full px-5 py-4 rounded-2xl border-2 outline-none transition-all bg-slate-800 border-slate-700 text-white focus:border-indigo-500">
+                </div>
+
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-5 rounded-[1.5rem] transition-all shadow-xl shadow-indigo-500/30 active:scale-95">
+                    포트폴리오에 등록
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. Delete Confirm Modal -->
+    <div id="delete-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" onclick="toggleModal('delete-modal', false)"></div>
+        <div class="relative w-full max-w-sm rounded-[2rem] p-8 text-center bg-slate-900 border border-slate-800">
+            <div class="w-16 h-16 bg-red-500/20 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i data-lucide="trash-2" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">정말 삭제할까요?</h3>
+            <p class="text-sm mb-8 text-slate-400">
+                등록된 게임 정보가 영구적으로 삭제됩니다.<br/>이 작업은 되돌릴 수 없습니다.
+            </p>
+            <div class="flex gap-3">
+                <button onclick="toggleModal('delete-modal', false)" class="flex-1 py-4 rounded-2xl font-bold bg-slate-800 hover:bg-slate-700 transition-colors text-white">
+                    취소
+                </button>
+                <button id="confirm-delete-btn" class="flex-1 py-4 rounded-2xl font-bold bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/30 active:scale-95 transition-all">
+                    삭제하기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+        // --- Firebase Configuration ---
+        const firebaseConfig = typeof __firebase_config !== 'undefined' 
+            ? JSON.parse(__firebase_config) 
+            : { /* Fallback for local testing if needed */ };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'vibe-games-portfolio-default';
+
+        let gamesList = [];
+        let pendingDeleteId = null;
+        let isDarkMode = true;
+
+        // --- Helper Functions ---
+        const showToast = (message, type = 'success') => {
+            const toast = document.getElementById('toast');
+            const toastContent = document.getElementById('toast-content');
+            const toastMessage = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMessage.textContent = message;
+            if (type === 'error') {
+                toastContent.className = 'px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 backdrop-blur-lg border bg-red-500/90 border-red-400 text-white';
+                toastIcon.setAttribute('data-lucide', 'alert-triangle');
+            } else {
+                toastContent.className = 'px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 backdrop-blur-lg border bg-indigo-600/90 border-indigo-400 text-white';
+                toastIcon.setAttribute('data-lucide', 'check-circle-2');
+            }
+            lucide.createIcons();
+            
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
         };
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        const toggleModal = (id, show) => {
+            const modal = document.getElementById(id);
+            if (show) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } else {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        };
+        window.toggleModal = toggleModal; // Make it global for inline onclick
+
+        const toggleTheme = () => {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark', isDarkMode);
+            
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const header = document.querySelector('header');
+            const footer = document.querySelector('footer');
+            const modalContents = document.querySelectorAll('.modal-content, #delete-modal > div:last-child');
+            const heroSubtitle = document.getElementById('hero-subtitle');
+
+            if (isDarkMode) {
+                document.body.className = 'dark bg-slate-950 text-slate-100 min-h-screen';
+                themeToggle.className = 'p-2.5 rounded-full transition-all bg-slate-800 hover:bg-slate-700 text-yellow-400';
+                themeIcon.setAttribute('data-lucide', 'sun');
+                header.className = 'sticky top-0 z-40 w-full border-b backdrop-blur-md border-slate-800 bg-slate-950/80';
+                footer.className = 'mt-20 py-16 border-t border-slate-900 bg-slate-950';
+                heroSubtitle.className = 'text-lg md:text-xl font-medium text-slate-400';
+                modalContents.forEach(el => {
+                    el.classList.add('bg-slate-900', 'border-slate-800', 'text-white');
+                    el.classList.remove('bg-white', 'border-slate-200', 'text-slate-900');
+                });
+            } else {
+                document.body.className = 'bg-slate-50 text-slate-900 min-h-screen';
+                themeToggle.className = 'p-2.5 rounded-full transition-all bg-slate-200 hover:bg-slate-300 text-indigo-600';
+                themeIcon.setAttribute('data-lucide', 'moon');
+                header.className = 'sticky top-0 z-40 w-full border-b backdrop-blur-md border-slate-200 bg-white/80';
+                footer.className = 'mt-20 py-16 border-t border-slate-100 bg-white';
+                heroSubtitle.className = 'text-lg md:text-xl font-medium text-slate-600';
+                modalContents.forEach(el => {
+                    el.classList.remove('bg-slate-900', 'border-slate-800', 'text-white');
+                    el.classList.add('bg-white', 'border-slate-200', 'text-slate-900');
+                });
+            }
+            lucide.createIcons();
+            renderGames(); // Refresh cards to apply theme colors
+        };
+        document.getElementById('theme-toggle').onclick = toggleTheme;
+
+        const renderGames = () => {
+            const grid = document.getElementById('game-grid');
+            const loading = document.getElementById('loading-state');
+            const empty = document.getElementById('empty-state');
+            
+            loading.classList.add('hidden');
+            grid.innerHTML = '';
+
+            if (gamesList.length === 0) {
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            empty.classList.add('hidden');
+            
+            gamesList.forEach(game => {
+                const card = document.createElement('div');
+                card.className = `group relative flex flex-col h-full overflow-hidden rounded-[2.5rem] border transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl animate-fade-in ${
+                    isDarkMode 
+                    ? 'bg-slate-900 border-slate-800 hover:shadow-indigo-500/20 hover:border-indigo-500/50' 
+                    : 'bg-white border-slate-200 hover:shadow-slate-300/60 hover:border-indigo-200'
+                }`;
+
+                const thumbnailHtml = game.thumbnail 
+                    ? `<img src="${game.thumbnail}" alt="${game.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=800'">`
+                    : `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950">
+                        <i data-lucide="gamepad-2" class="w-20 h-20 text-indigo-500/30 animate-pulse"></i>
+                       </div>`;
+
+                card.innerHTML = `
+                    <div class="aspect-video w-full overflow-hidden bg-slate-800 relative">
+                        ${thumbnailHtml}
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <a href="${game.url}" target="_blank" class="bg-white text-indigo-600 px-6 py-3 rounded-xl font-bold flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover:bg-indigo-50">
+                                <i data-lucide="monitor" class="w-5 h-5"></i> 시작하기
+                            </a>
+                        </div>
+                        <div class="absolute top-5 right-5 z-10">
+                            <button onclick="confirmDelete('${game.id}')" class="p-3 bg-red-500/90 hover:bg-red-600 text-white rounded-2xl backdrop-blur-md shadow-lg transform scale-90 opacity-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300">
+                                <i data-lucide="trash-2" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col">
+                        <div class="mb-4">
+                            <h3 class="text-2xl font-black mb-3 group-hover:text-indigo-500 transition-colors line-clamp-1">${game.title}</h3>
+                            <p class="text-base leading-relaxed line-clamp-2 h-12 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}">
+                                ${game.description || '작성된 설명이 없습니다.'}
+                            </p>
+                        </div>
+                        <div class="mt-auto pt-6 flex items-center justify-between border-t ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                                <span class="text-xs font-bold uppercase tracking-widest opacity-60">Ready to play</span>
+                            </div>
+                            <a href="${game.url}" target="_blank" class="p-2.5 rounded-full transition-colors ${isDarkMode ? 'hover:bg-slate-800 text-indigo-400' : 'hover:bg-indigo-50 text-indigo-600'}">
+                                <i data-lucide="external-link" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            lucide.createIcons();
+        };
+
+        // --- Event Listeners & Auth ---
+        window.confirmDelete = (id) => {
+            pendingDeleteId = id;
+            toggleModal('delete-modal', true);
+        };
+
+        document.getElementById('confirm-delete-btn').onclick = async () => {
+            if (!pendingDeleteId) return;
+            try {
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'games', pendingDeleteId));
+                showToast("게임이 삭제되었습니다.");
+                toggleModal('delete-modal', false);
+                pendingDeleteId = null;
+            } catch (error) {
+                showToast("삭제 중 오류가 발생했습니다.", "error");
+            }
+        };
+
+        document.getElementById('add-game-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('form-title').value;
+            const url = document.getElementById('form-url').value;
+            const description = document.getElementById('form-description').value;
+            const thumbnail = document.getElementById('form-thumbnail').value;
+
+            try {
+                const gamesRef = collection(db, 'artifacts', appId, 'public', 'data', 'games');
+                await addDoc(gamesRef, {
+                    title, url, description, thumbnail,
+                    createdAt: new Date().toISOString()
+                });
+                e.target.reset();
+                toggleModal('add-modal', false);
+                showToast("성공적으로 추가되었습니다!");
+            } catch (error) {
+                showToast("등록 중 오류가 발생했습니다.", "error");
+            }
+        };
+
+        // Init Year
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Auth and Data Loading
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const gamesRef = collection(db, 'artifacts', appId, 'public', 'data', 'games');
+                onSnapshot(gamesRef, (snapshot) => {
+                    gamesList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    // Sort in memory (Rule 2)
+                    gamesList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    renderGames();
+                }, (err) => {
+                    console.error("Data fetch error:", err);
+                    showToast("데이터를 불러오지 못했습니다.", "error");
+                });
+            } else {
+                signInAnonymously(auth).catch(err => {
+                    console.error("Auth error:", err);
+                    showToast("로그인에 실패했습니다.", "error");
+                });
+            }
+        });
+
+        // Initialize Lucide
+        lucide.createIcons();
     </script>
 </body>
 </html>

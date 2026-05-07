@@ -13,35 +13,39 @@
         
         body {
             font-family: 'Pretendard', sans-serif;
-            transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             -webkit-font-smoothing: antialiased;
         }
 
+        /* 공통 카드 스타일 */
         .glass-card {
-            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
             transition: all 0.3s ease;
         }
 
+        /* 다크 모드 카드 */
+        .dark .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
         .dark .glass-card:hover {
             border-color: rgba(99, 102, 241, 0.5);
             box-shadow: 0 0 30px rgba(99, 102, 241, 0.15);
         }
 
+        /* 라이트 모드 카드 */
         .light .glass-card {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.9);
             border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
-
         .light .glass-card:hover {
             border-color: rgba(99, 102, 241, 0.3);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
 
-        /* 텍스트 네온 효과 */
-        .neon-text {
+        /* 네온 텍스트 효과 (다크 모드 전용) */
+        .dark .neon-text {
             text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
         }
 
@@ -52,7 +56,6 @@
             overflow: hidden;
         }
 
-        /* 애니메이션 */
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -61,7 +64,6 @@
             animation: slideUp 0.6s ease-out forwards;
         }
 
-        /* 스크롤바 디자인 */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         .dark ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
@@ -72,27 +74,27 @@
 
     <!-- 토스트 알림 -->
     <div id="toast" class="fixed top-12 left-1/2 -translate-x-1/2 z-[100] hidden">
-        <div id="toast-content" class="px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 backdrop-blur-xl border bg-indigo-600/90 border-indigo-400/50 text-white animate-slide-up">
+        <div id="toast-content" class="px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 backdrop-blur-xl border bg-indigo-600/90 border-indigo-400/50 text-white">
             <i id="toast-icon" data-lucide="check-circle-2" class="w-4 h-4"></i>
             <span id="toast-message" class="text-sm font-bold tracking-tight"></span>
         </div>
     </div>
 
     <!-- 헤더 -->
-    <header class="sticky top-0 z-40 w-full border-b backdrop-blur-xl transition-all duration-300 border-slate-800/50 bg-slate-950/70 dark:border-slate-800/50 dark:bg-slate-950/70 light:bg-white/80 light:border-slate-200">
+    <header id="main-header" class="sticky top-0 z-40 w-full border-b backdrop-blur-xl transition-colors duration-300 border-slate-800/50 bg-slate-950/70">
         <div class="container mx-auto px-8 h-20 flex items-center justify-between">
             <div class="flex items-center gap-4">
                 <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
                     <i data-lucide="zap" class="text-white w-6 h-6"></i>
                 </div>
-                <h1 class="text-xl font-bold tracking-tighter text-white">Vibe Coding <span class="text-indigo-500 font-extrabold uppercase">Games</span></h1>
+                <h1 class="text-xl font-bold tracking-tighter">Vibe Coding <span class="text-indigo-500 font-extrabold uppercase">Games</span></h1>
             </div>
             
             <div class="flex items-center gap-3">
-                <button id="theme-toggle" class="p-2.5 rounded-xl transition-all border border-transparent hover:border-slate-700/50 hover:bg-slate-800/50 dark:text-slate-400 light:text-slate-600">
+                <button id="theme-toggle" class="p-2.5 rounded-xl transition-all border border-transparent hover:border-slate-700/50 hover:bg-slate-800/50">
                     <i id="theme-icon" data-lucide="sun" class="w-5 h-5"></i>
                 </button>
-                <div class="h-6 w-[1px] bg-slate-800 mx-2"></div>
+                <div id="divider" class="h-6 w-[1px] bg-slate-800 mx-2"></div>
                 <button onclick="toggleModal('add-modal', true)" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-indigo-500/20 active:scale-95 uppercase tracking-tighter">
                     <i data-lucide="plus" class="w-4 h-4"></i> 추가하기
                 </button>
@@ -102,13 +104,12 @@
 
     <!-- 메인 컨텐츠 -->
     <main class="container mx-auto px-8 py-20">
-        <!-- 소개 섹션 -->
         <section class="mb-24 text-center max-w-3xl mx-auto animate-slide-up">
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-500 text-xs font-bold uppercase tracking-widest mb-8">
                 <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
                 Official Collection
             </div>
-            <h2 class="text-5xl md:text-7xl font-black mb-8 tracking-tighter leading-tight neon-text uppercase">VIBE CODING GAMES</h2>
+            <h2 id="main-title" class="text-5xl md:text-7xl font-black mb-8 tracking-tighter leading-tight neon-text uppercase text-white">VIBE CODING GAMES</h2>
             <p id="hero-subtitle" class="text-lg md:text-xl font-medium text-slate-400 max-w-xl mx-auto leading-relaxed">
                 모든 게임들은 Gemini를 이용하여 만들었습니다.
             </p>
@@ -128,20 +129,19 @@
 
         <!-- 게임 그리드 -->
         <div id="game-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- 게임 카드가 여기에 삽입됩니다 -->
         </div>
     </main>
 
     <!-- 푸터 -->
-    <footer class="mt-32 py-20 border-t border-slate-900/50 transition-colors">
+    <footer id="main-footer" class="mt-32 py-20 border-t border-slate-900/50 transition-colors duration-300 bg-slate-950">
         <div class="container mx-auto px-8 text-center">
             <div class="flex justify-center mb-8">
                 <div class="w-12 h-12 bg-slate-900/50 border border-slate-800 rounded-2xl flex items-center justify-center">
                     <i data-lucide="zap" class="text-indigo-500 w-6 h-6"></i>
                 </div>
             </div>
-            <p class="font-bold mb-3 tracking-tight text-slate-300">VIBE CODING GAMES</p>
-            <p class="text-xs uppercase tracking-[0.2em] text-slate-600 font-bold">
+            <p id="footer-text" class="font-bold mb-3 tracking-tight text-slate-300">VIBE CODING GAMES</p>
+            <p id="copyright" class="text-xs uppercase tracking-[0.2em] text-slate-600 font-bold">
                 © 2026 Moon Seo-yun all rights reserved.
             </p>
         </div>
@@ -150,30 +150,26 @@
     <!-- 모달 -->
     <div id="add-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-6">
         <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity" onclick="toggleModal('add-modal', false)"></div>
-        <div class="relative w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden glass-card dark:bg-slate-900 light:bg-white border-white/10 p-8 modal-content animate-slide-up">
+        <div id="modal-box" class="relative w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden p-8 animate-slide-up bg-slate-900 border border-white/10">
             <div class="flex justify-between items-center mb-10">
                 <h3 class="text-2xl font-black tracking-tight">새 프로젝트 등록</h3>
-                <button onclick="toggleModal('add-modal', false)" class="p-2 rounded-xl hover:bg-slate-800/50 transition-colors text-slate-400">
+                <button onclick="toggleModal('add-modal', false)" class="p-2 rounded-xl hover:bg-slate-800/50 transition-colors">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
-
             <form id="add-game-form" class="space-y-8">
                 <div class="space-y-3">
                     <label class="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-500">프로젝트 타이틀</label>
                     <input type="text" id="form-title" required placeholder="게임 이름을 입력하세요" class="w-full px-5 py-4 rounded-2xl border-2 outline-none transition-all bg-transparent border-slate-800 text-white focus:border-indigo-500 font-bold">
                 </div>
-
                 <div class="space-y-3">
-                    <label class="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-500">플레이 링크 (Github/Vercel)</label>
+                    <label class="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-500">플레이 링크 (URL)</label>
                     <input type="url" id="form-url" required placeholder="https://..." class="w-full px-5 py-4 rounded-2xl border-2 outline-none transition-all bg-transparent border-slate-800 text-white focus:border-indigo-500 font-medium">
                 </div>
-
                 <div class="space-y-3">
                     <label class="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-500">프로젝트 요약 설명</label>
                     <textarea id="form-description" rows="3" placeholder="어떤 게임인가요?" class="w-full px-5 py-4 rounded-2xl border-2 outline-none transition-all bg-transparent border-slate-800 text-white focus:border-indigo-500 resize-none font-medium leading-relaxed"></textarea>
                 </div>
-
                 <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-5 rounded-2xl transition-all shadow-xl shadow-indigo-500/30 active:scale-95 uppercase tracking-tighter mt-4">
                     포트폴리오에 저장
                 </button>
@@ -184,31 +180,27 @@
     <!-- 삭제 확인 모달 -->
     <div id="delete-modal" class="fixed inset-0 z-[60] hidden items-center justify-center p-6">
         <div class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm" onclick="toggleModal('delete-modal', false)"></div>
-        <div class="relative w-full max-w-sm rounded-[2.5rem] p-10 text-center glass-card dark:bg-slate-900 light:bg-white border-white/5">
+        <div id="delete-modal-box" class="relative w-full max-w-sm rounded-[2.5rem] p-10 text-center bg-slate-900 border border-white/5">
             <div class="w-20 h-20 bg-red-500/10 text-red-500 rounded-3xl flex items-center justify-center mx-auto mb-8">
                 <i data-lucide="trash-2" class="w-10 h-10"></i>
             </div>
             <h3 class="text-2xl font-bold mb-3 tracking-tight">프로젝트 삭제</h3>
-            <p class="text-slate-500 mb-10 leading-relaxed text-sm">
-                해당 프로젝트가 목록에서 영구적으로 제거됩니다.<br/>이 작업은 취소할 수 없습니다.
-            </p>
+            <p class="text-slate-500 mb-10 leading-relaxed text-sm">목록에서 영구적으로 제거됩니다.</p>
             <div class="flex gap-4">
                 <button onclick="toggleModal('delete-modal', false)" class="flex-1 py-4 rounded-2xl font-bold bg-slate-800 text-white hover:bg-slate-700 transition-colors">취소</button>
-                <button id="confirm-delete-btn" class="flex-1 py-4 rounded-2xl font-bold bg-red-500 text-white hover:bg-red-600 transition-all shadow-lg shadow-red-500/20 active:scale-95">삭제하기</button>
+                <button id="confirm-delete-btn" class="flex-1 py-4 rounded-2xl font-bold bg-red-500 text-white hover:bg-red-600 transition-all">삭제하기</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- 초기 게임 데이터 세팅 ---
         const INITIAL_GAMES = [
             {
                 id: "vibe-rush-official",
                 title: "Vibe Rush", 
                 url: "https://gamedevmsy.github.io/VibeCoding_Game/VibeRush", 
-                description: "10초라는 짧은 제한 시간 내에 무작위로 등장하는 미니게임 플레이",
-                createdAt: new Date().toISOString(),
-                type: "Micro-game"
+                description: "10초라는 짧은 제한 시간 내에 무작위로 등장하는 4가지 미니게임을 클리어하며 한계에 도전하는 게임",
+                createdAt: new Date().toISOString()
             }
         ];
 
@@ -217,7 +209,7 @@
         let isDarkMode = true;
 
         const loadGames = () => {
-            const saved = localStorage.getItem('vibe_minimal_portfolio');
+            const saved = localStorage.getItem('vibe_minimal_portfolio_v2');
             if (saved) {
                 const savedGames = JSON.parse(saved);
                 const combined = [...INITIAL_GAMES];
@@ -232,16 +224,8 @@
         };
 
         const saveToLocal = () => {
-            localStorage.setItem('vibe_minimal_portfolio', JSON.stringify(gamesList));
+            localStorage.setItem('vibe_minimal_portfolio_v2', JSON.stringify(gamesList));
             renderGames();
-        };
-
-        const showToast = (message, type = 'success') => {
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toast-message');
-            toastMessage.textContent = message;
-            toast.classList.remove('hidden');
-            setTimeout(() => toast.classList.add('hidden'), 3000);
         };
 
         const toggleModal = (id, show) => {
@@ -250,11 +234,39 @@
             else { modal.classList.add('hidden'); modal.classList.remove('flex'); }
         };
 
+        // 전체 사이트 테마 토글 로직
         document.getElementById('theme-toggle').onclick = () => {
             isDarkMode = !isDarkMode;
-            document.body.classList.toggle('dark', isDarkMode);
-            document.body.classList.toggle('light', !isDarkMode);
-            document.getElementById('theme-icon').setAttribute('data-lucide', isDarkMode ? 'sun' : 'moon');
+            const body = document.body;
+            const header = document.getElementById('main-header');
+            const footer = document.getElementById('main-footer');
+            const modalBox = document.getElementById('modal-box');
+            const delModalBox = document.getElementById('delete-modal-box');
+            const divider = document.getElementById('divider');
+            const title = document.getElementById('main-title');
+            const icon = document.getElementById('theme-icon');
+
+            if (isDarkMode) {
+                body.className = "dark bg-slate-950 text-slate-100 min-h-screen";
+                header.className = "sticky top-0 z-40 w-full border-b backdrop-blur-xl transition-colors duration-300 border-slate-800/50 bg-slate-950/70";
+                footer.className = "mt-32 py-20 border-t border-slate-900/50 transition-colors duration-300 bg-slate-950";
+                modalBox.className = "relative w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden p-8 animate-slide-up bg-slate-900 border border-white/10";
+                delModalBox.className = "relative w-full max-w-sm rounded-[2.5rem] p-10 text-center bg-slate-900 border border-white/5 text-white";
+                divider.className = "h-6 w-[1px] bg-slate-800 mx-2";
+                title.classList.add('text-white');
+                title.classList.remove('text-slate-900');
+                icon.setAttribute('data-lucide', 'sun');
+            } else {
+                body.className = "light bg-slate-50 text-slate-900 min-h-screen";
+                header.className = "sticky top-0 z-40 w-full border-b backdrop-blur-xl transition-colors duration-300 border-slate-200 bg-white/80";
+                footer.className = "mt-32 py-20 border-t border-slate-200 transition-colors duration-300 bg-white";
+                modalBox.className = "relative w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden p-8 animate-slide-up bg-white border border-slate-200";
+                delModalBox.className = "relative w-full max-w-sm rounded-[2.5rem] p-10 text-center bg-white border border-slate-200 text-slate-900";
+                divider.className = "h-6 w-[1px] bg-slate-200 mx-2";
+                title.classList.remove('text-white');
+                title.classList.add('text-slate-900');
+                icon.setAttribute('data-lucide', 'moon');
+            }
             lucide.createIcons();
             renderGames();
         };
@@ -275,7 +287,7 @@
                 card.className = `glass-card group relative p-10 flex flex-col h-full rounded-[2.5rem] animate-slide-up`;
                 
                 const titleColor = isDarkMode ? 'text-white' : 'text-slate-900';
-                const descColor = isDarkMode ? 'text-slate-400' : 'text-slate-500';
+                const descColor = isDarkMode ? 'text-slate-400' : 'text-slate-600';
 
                 card.innerHTML = `
                     <div class="flex-grow">
@@ -283,7 +295,7 @@
                             <div class="w-14 h-14 bg-indigo-600/10 border border-indigo-500/20 rounded-2xl flex items-center justify-center text-indigo-500 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
                                 <i data-lucide="gamepad-2" class="w-7 h-7"></i>
                             </div>
-                            <button onclick="confirmDelete('${game.id}')" class="p-2 text-slate-600 hover:text-red-500 transition-colors">
+                            <button onclick="confirmDelete('${game.id}')" class="p-2 text-slate-400 hover:text-red-500 transition-colors">
                                 <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </button>
                         </div>
@@ -294,7 +306,7 @@
                         <a href="${game.url}" target="_blank" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-4 rounded-2xl font-black text-xs text-center transition-all active:scale-95 uppercase tracking-tighter shadow-lg shadow-indigo-500/20">
                             Play
                         </a>
-                        <a href="${game.url}" target="_blank" class="w-14 h-14 border border-slate-800 dark:border-slate-800 light:border-slate-200 rounded-2xl flex items-center justify-center hover:bg-slate-800/10 transition-all ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}">
+                        <a href="${game.url}" target="_blank" class="w-14 h-14 border border-slate-800 dark:border-slate-800 light:border-slate-200 rounded-2xl flex items-center justify-center hover:bg-slate-800/10 transition-all ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}">
                             <i data-lucide="external-link" class="w-5 h-5"></i>
                         </a>
                     </div>
@@ -310,7 +322,6 @@
             gamesList = gamesList.filter(g => g.id !== pendingDeleteId);
             saveToLocal();
             toggleModal('delete-modal', false);
-            showToast("프로젝트가 성공적으로 삭제되었습니다.");
         };
 
         document.getElementById('add-game-form').onsubmit = (e) => {
@@ -326,7 +337,6 @@
             saveToLocal();
             toggleModal('add-modal', false);
             e.target.reset();
-            showToast("새 프로젝트가 등록되었습니다!");
         };
 
         window.onload = () => {

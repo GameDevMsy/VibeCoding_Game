@@ -74,7 +74,7 @@
 
     <!-- 토스트 알림 -->
     <div id="toast" class="fixed top-12 left-1/2 -translate-x-1/2 z-[100] hidden">
-        <div id="toast-content" class="px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 backdrop-blur-xl border bg-indigo-600/90 border-indigo-400/50 text-white">
+        <div id="toast-content" class="px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 backdrop-blur-xl border bg-indigo-600/90 border-indigo-400/50 text-white animate-slide-up">
             <i id="toast-icon" data-lucide="check-circle-2" class="w-4 h-4"></i>
             <span id="toast-message" class="text-sm font-bold tracking-tight"></span>
         </div>
@@ -87,15 +87,23 @@
                 <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
                     <i data-lucide="zap" class="text-white w-6 h-6"></i>
                 </div>
-                <h1 class="text-xl font-bold tracking-tighter">Vibe Coding <span class="text-indigo-500 font-extrabold uppercase">Games</span></h1>
+                <h1 class="text-xl font-bold tracking-tighter">Vibe Coding <span class="text-indigo-500 font-extrabold uppercase text-white dark:text-indigo-500">Games</span></h1>
             </div>
             
             <div class="flex items-center gap-3">
+                <!-- 방문자/관리자 모드 전환 버튼 -->
+                <button id="mode-toggle" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-tighter border transition-all dark:border-slate-800 dark:hover:bg-slate-800 light:border-slate-200 light:hover:bg-slate-100">
+                    <i id="mode-icon" data-lucide="lock" class="w-3 h-3"></i>
+                    <span id="mode-text">관리자 모드</span>
+                </button>
+
+                <div class="h-4 w-[1px] bg-slate-800 mx-1"></div>
+
                 <button id="theme-toggle" class="p-2.5 rounded-xl transition-all border border-transparent hover:border-slate-700/50 hover:bg-slate-800/50">
                     <i id="theme-icon" data-lucide="sun" class="w-5 h-5"></i>
                 </button>
-                <div id="divider" class="h-6 w-[1px] bg-slate-800 mx-2"></div>
-                <button onclick="toggleModal('add-modal', true)" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-indigo-500/20 active:scale-95 uppercase tracking-tighter">
+
+                <button id="header-add-btn" onclick="openAddModal()" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-indigo-500/20 active:scale-95 uppercase tracking-tighter">
                     <i data-lucide="plus" class="w-4 h-4"></i> 추가하기
                 </button>
             </div>
@@ -120,9 +128,9 @@
             <div class="w-20 h-20 flex items-center justify-center rounded-3xl bg-slate-800/50 text-slate-500 mb-6">
                 <i data-lucide="layout-grid" class="w-10 h-10"></i>
             </div>
-            <h3 class="text-2xl font-bold mb-3 tracking-tight">아직 등록된 게임이 없습니다</h3>
+            <h3 class="text-2xl font-bold mb-3 tracking-tight text-white dark:text-white light:text-slate-900">아직 등록된 게임이 없습니다</h3>
             <p class="text-slate-500 mb-10">당신의 멋진 프로젝트를 목록에 추가해 보세요.</p>
-            <button onclick="toggleModal('add-modal', true)" class="px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold transition-all hover:bg-indigo-500 shadow-xl shadow-indigo-500/20 active:scale-95 uppercase tracking-tighter">
+            <button id="empty-add-btn" onclick="openAddModal()" class="px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold transition-all hover:bg-indigo-500 shadow-xl shadow-indigo-500/20 active:scale-95 uppercase tracking-tighter">
                 프로젝트 등록하기
             </button>
         </div>
@@ -152,25 +160,26 @@
         <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity" onclick="toggleModal('add-modal', false)"></div>
         <div id="modal-box" class="relative w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden p-8 animate-slide-up bg-slate-900 border border-white/10">
             <div class="flex justify-between items-center mb-10">
-                <h3 class="text-2xl font-black tracking-tight">새 프로젝트 등록</h3>
+                <h3 id="modal-title" class="text-2xl font-black tracking-tight text-white dark:text-white light:text-slate-900">새 프로젝트 등록</h3>
                 <button onclick="toggleModal('add-modal', false)" class="p-2 rounded-xl hover:bg-slate-800/50 transition-colors">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
             <form id="add-game-form" class="space-y-8">
+                <input type="hidden" id="form-id">
                 <div class="space-y-3">
                     <label class="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-500">프로젝트 타이틀</label>
-                    <input type="text" id="form-title" required placeholder="게임 이름을 입력하세요" class="w-full px-5 py-4 rounded-2xl border-2 outline-none transition-all bg-transparent border-slate-800 text-white focus:border-indigo-500 font-bold">
+                    <input type="text" id="form-title" required placeholder="게임 이름을 입력하세요" class="w-full px-5 py-4 rounded-2xl border-2 outline-none transition-all bg-transparent border-slate-800 text-white focus:border-indigo-500 font-bold dark:text-white light:text-slate-900 light:border-slate-200">
                 </div>
                 <div class="space-y-3">
                     <label class="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-500">플레이 링크 (URL)</label>
-                    <input type="url" id="form-url" required placeholder="https://..." class="w-full px-5 py-4 rounded-2xl border-2 outline-none transition-all bg-transparent border-slate-800 text-white focus:border-indigo-500 font-medium">
+                    <input type="url" id="form-url" required placeholder="https://..." class="w-full px-5 py-4 rounded-2xl border-2 outline-none transition-all bg-transparent border-slate-800 text-white focus:border-indigo-500 font-medium dark:text-white light:text-slate-900 light:border-slate-200">
                 </div>
                 <div class="space-y-3">
                     <label class="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-500">프로젝트 요약 설명</label>
-                    <textarea id="form-description" rows="3" placeholder="어떤 게임인가요?" class="w-full px-5 py-4 rounded-2xl border-2 outline-none transition-all bg-transparent border-slate-800 text-white focus:border-indigo-500 resize-none font-medium leading-relaxed"></textarea>
+                    <textarea id="form-description" rows="3" placeholder="어떤 게임인가요?" class="w-full px-5 py-4 rounded-2xl border-2 outline-none transition-all bg-transparent border-slate-800 text-white focus:border-indigo-500 resize-none font-medium leading-relaxed dark:text-white light:text-slate-900 light:border-slate-200"></textarea>
                 </div>
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-5 rounded-2xl transition-all shadow-xl shadow-indigo-500/30 active:scale-95 uppercase tracking-tighter mt-4">
+                <button type="submit" id="form-submit-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-5 rounded-2xl transition-all shadow-xl shadow-indigo-500/30 active:scale-95 uppercase tracking-tighter mt-4">
                     포트폴리오에 저장
                 </button>
             </form>
@@ -184,7 +193,7 @@
             <div class="w-20 h-20 bg-red-500/10 text-red-500 rounded-3xl flex items-center justify-center mx-auto mb-8">
                 <i data-lucide="trash-2" class="w-10 h-10"></i>
             </div>
-            <h3 class="text-2xl font-bold mb-3 tracking-tight">프로젝트 삭제</h3>
+            <h3 class="text-2xl font-bold mb-3 tracking-tight text-white dark:text-white light:text-slate-900">프로젝트 삭제</h3>
             <p class="text-slate-500 mb-10 leading-relaxed text-sm">목록에서 영구적으로 제거됩니다.</p>
             <div class="flex gap-4">
                 <button onclick="toggleModal('delete-modal', false)" class="flex-1 py-4 rounded-2xl font-bold bg-slate-800 text-white hover:bg-slate-700 transition-colors">취소</button>
@@ -207,9 +216,10 @@
         let gamesList = [];
         let pendingDeleteId = null;
         let isDarkMode = true;
+        let isOwnerMode = true; // 방문자 모드 구분용
 
         const loadGames = () => {
-            const saved = localStorage.getItem('vibe_minimal_portfolio_v2');
+            const saved = localStorage.getItem('vibe_minimal_portfolio_v3');
             if (saved) {
                 const savedGames = JSON.parse(saved);
                 const combined = [...INITIAL_GAMES];
@@ -224,8 +234,16 @@
         };
 
         const saveToLocal = () => {
-            localStorage.setItem('vibe_minimal_portfolio_v2', JSON.stringify(gamesList));
+            localStorage.setItem('vibe_minimal_portfolio_v3', JSON.stringify(gamesList));
             renderGames();
+        };
+
+        const showToast = (message, type = 'success') => {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            toastMessage.textContent = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
         };
 
         const toggleModal = (id, show) => {
@@ -234,7 +252,32 @@
             else { modal.classList.add('hidden'); modal.classList.remove('flex'); }
         };
 
-        // 전체 사이트 테마 토글 로직
+        // 모드 전환 로직 (방문자/관리자)
+        document.getElementById('mode-toggle').onclick = () => {
+            isOwnerMode = !isOwnerMode;
+            const modeIcon = document.getElementById('mode-icon');
+            const modeText = document.getElementById('mode-text');
+            const headerAddBtn = document.getElementById('header-add-btn');
+            const emptyAddBtn = document.getElementById('empty-add-btn');
+
+            if (isOwnerMode) {
+                modeIcon.setAttribute('data-lucide', 'lock');
+                modeText.textContent = "관리자 모드";
+                headerAddBtn.style.display = "flex";
+                emptyAddBtn.style.display = "block";
+                showToast("관리자 모드로 전환되었습니다.");
+            } else {
+                modeIcon.setAttribute('data-lucide', 'eye');
+                modeText.textContent = "방문자 모드";
+                headerAddBtn.style.display = "none";
+                emptyAddBtn.style.display = "none";
+                showToast("방문자 모드(보기 전용)로 전환되었습니다.");
+            }
+            lucide.createIcons();
+            renderGames();
+        };
+
+        // 테마 토글 로직
         document.getElementById('theme-toggle').onclick = () => {
             isDarkMode = !isDarkMode;
             const body = document.body;
@@ -244,7 +287,8 @@
             const delModalBox = document.getElementById('delete-modal-box');
             const divider = document.getElementById('divider');
             const title = document.getElementById('main-title');
-            const icon = document.getElementById('theme-icon');
+            const subtitle = document.getElementById('hero-subtitle');
+            const themeIcon = document.getElementById('theme-icon');
 
             if (isDarkMode) {
                 body.className = "dark bg-slate-950 text-slate-100 min-h-screen";
@@ -252,23 +296,48 @@
                 footer.className = "mt-32 py-20 border-t border-slate-900/50 transition-colors duration-300 bg-slate-950";
                 modalBox.className = "relative w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden p-8 animate-slide-up bg-slate-900 border border-white/10";
                 delModalBox.className = "relative w-full max-w-sm rounded-[2.5rem] p-10 text-center bg-slate-900 border border-white/5 text-white";
-                divider.className = "h-6 w-[1px] bg-slate-800 mx-2";
-                title.classList.add('text-white');
-                title.classList.remove('text-slate-900');
-                icon.setAttribute('data-lucide', 'sun');
+                divider.className = "h-4 w-[1px] bg-slate-800 mx-1";
+                title.className = "text-5xl md:text-7xl font-black mb-8 tracking-tighter leading-tight neon-text uppercase text-white";
+                subtitle.className = "text-lg md:text-xl font-medium text-slate-400 max-w-xl mx-auto leading-relaxed";
+                themeIcon.setAttribute('data-lucide', 'sun');
             } else {
                 body.className = "light bg-slate-50 text-slate-900 min-h-screen";
                 header.className = "sticky top-0 z-40 w-full border-b backdrop-blur-xl transition-colors duration-300 border-slate-200 bg-white/80";
                 footer.className = "mt-32 py-20 border-t border-slate-200 transition-colors duration-300 bg-white";
                 modalBox.className = "relative w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden p-8 animate-slide-up bg-white border border-slate-200";
                 delModalBox.className = "relative w-full max-w-sm rounded-[2.5rem] p-10 text-center bg-white border border-slate-200 text-slate-900";
-                divider.className = "h-6 w-[1px] bg-slate-200 mx-2";
-                title.classList.remove('text-white');
-                title.classList.add('text-slate-900');
-                icon.setAttribute('data-lucide', 'moon');
+                divider.className = "h-4 w-[1px] bg-slate-200 mx-1";
+                title.className = "text-5xl md:text-7xl font-black mb-8 tracking-tighter leading-tight uppercase text-slate-900";
+                subtitle.className = "text-lg md:text-xl font-medium text-slate-600 max-w-xl mx-auto leading-relaxed";
+                themeIcon.setAttribute('data-lucide', 'moon');
             }
             lucide.createIcons();
             renderGames();
+        };
+
+        // 추가 모달 열기 (초기화)
+        window.openAddModal = () => {
+            document.getElementById('modal-title').textContent = "새 프로젝트 등록";
+            document.getElementById('form-id').value = "";
+            document.getElementById('form-title').value = "";
+            document.getElementById('form-url').value = "";
+            document.getElementById('form-description').value = "";
+            document.getElementById('form-submit-btn').textContent = "포트폴리오에 저장";
+            toggleModal('add-modal', true);
+        };
+
+        // 수정 모달 열기
+        window.openEditModal = (id) => {
+            const game = gamesList.find(g => g.id === id);
+            if (!game) return;
+
+            document.getElementById('modal-title').textContent = "프로젝트 수정";
+            document.getElementById('form-id').value = game.id;
+            document.getElementById('form-title').value = game.title;
+            document.getElementById('form-url').value = game.url;
+            document.getElementById('form-description').value = game.description;
+            document.getElementById('form-submit-btn').textContent = "수정사항 저장";
+            toggleModal('add-modal', true);
         };
 
         const renderGames = () => {
@@ -287,7 +356,19 @@
                 card.className = `glass-card group relative p-10 flex flex-col h-full rounded-[2.5rem] animate-slide-up`;
                 
                 const titleColor = isDarkMode ? 'text-white' : 'text-slate-900';
-                const descColor = isDarkMode ? 'text-slate-400' : 'text-slate-600';
+                const descColor = isDarkMode ? 'text-slate-400' : 'text-slate-500';
+
+                // 관리자용 수정/삭제 버튼 HTML (방문자 모드일 땐 숨김)
+                const adminButtons = isOwnerMode ? `
+                    <div class="flex gap-2">
+                        <button onclick="openEditModal('${game.id}')" class="p-2 text-slate-400 hover:text-indigo-500 transition-colors" title="수정">
+                            <i data-lucide="edit-3" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="confirmDelete('${game.id}')" class="p-2 text-slate-400 hover:text-red-500 transition-colors" title="삭제">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                ` : '';
 
                 card.innerHTML = `
                     <div class="flex-grow">
@@ -295,18 +376,16 @@
                             <div class="w-14 h-14 bg-indigo-600/10 border border-indigo-500/20 rounded-2xl flex items-center justify-center text-indigo-500 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
                                 <i data-lucide="gamepad-2" class="w-7 h-7"></i>
                             </div>
-                            <button onclick="confirmDelete('${game.id}')" class="p-2 text-slate-400 hover:text-red-500 transition-colors">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                            </button>
+                            ${adminButtons}
                         </div>
                         <h3 class="text-2xl font-black mb-4 tracking-tight group-hover:text-indigo-500 transition-colors ${titleColor}">${game.title}</h3>
                         <p class="text-sm leading-relaxed mb-10 line-clamp-2 ${descColor}">${game.description || '작성된 설명이 없습니다.'}</p>
                     </div>
                     <div class="mt-auto flex items-center gap-4">
-                        <a href="${game.url}" target="_blank" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-4 rounded-2xl font-black text-xs text-center transition-all active:scale-95 uppercase tracking-tighter shadow-lg shadow-indigo-500/20">
+                        <a href="${game.url}" target="_blank" class="flex-1 bg-indigo-600 hover:bg-indigo-50 text-white px-6 py-4 rounded-2xl font-black text-xs text-center transition-all active:scale-95 uppercase tracking-tighter shadow-lg shadow-indigo-500/20">
                             Play
                         </a>
-                        <a href="${game.url}" target="_blank" class="w-14 h-14 border border-slate-800 dark:border-slate-800 light:border-slate-200 rounded-2xl flex items-center justify-center hover:bg-slate-800/10 transition-all ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}">
+                        <a href="${game.url}" target="_blank" class="w-14 h-14 border rounded-2xl flex items-center justify-center hover:bg-slate-800/10 transition-all ${isDarkMode ? 'border-slate-800 text-slate-400' : 'border-slate-200 text-slate-600'}">
                             <i data-lucide="external-link" class="w-5 h-5"></i>
                         </a>
                     </div>
@@ -322,18 +401,34 @@
             gamesList = gamesList.filter(g => g.id !== pendingDeleteId);
             saveToLocal();
             toggleModal('delete-modal', false);
+            showToast("프로젝트가 삭제되었습니다.");
         };
 
         document.getElementById('add-game-form').onsubmit = (e) => {
             e.preventDefault();
-            const newGame = {
-                id: Date.now().toString(),
-                title: document.getElementById('form-title').value,
-                url: document.getElementById('form-url').value,
-                description: document.getElementById('form-description').value,
-                createdAt: new Date().toISOString()
-            };
-            gamesList.unshift(newGame);
+            const id = document.getElementById('form-id').value;
+            const title = document.getElementById('form-title').value;
+            const url = document.getElementById('form-url').value;
+            const description = document.getElementById('form-description').value;
+
+            if (id) {
+                // 수정 모드
+                const idx = gamesList.findIndex(g => g.id === id);
+                if (idx !== -1) {
+                    gamesList[idx] = { ...gamesList[idx], title, url, description };
+                    showToast("성공적으로 수정되었습니다.");
+                }
+            } else {
+                // 신규 등록 모드
+                const newGame = {
+                    id: Date.now().toString(),
+                    title, url, description,
+                    createdAt: new Date().toISOString()
+                };
+                gamesList.unshift(newGame);
+                showToast("새 프로젝트가 등록되었습니다!");
+            }
+            
             saveToLocal();
             toggleModal('add-modal', false);
             e.target.reset();

@@ -92,26 +92,24 @@
             </div>
             
             <div class="flex items-center gap-2 md:gap-3">
-                <!-- 방문자 링크 생성 버튼 -->
+                <!-- 공유 버튼 (관리자용) -->
                 <button id="share-link-btn" class="flex items-center gap-2 px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-tighter border transition-all dark:border-slate-800 dark:hover:bg-slate-800 border-slate-200 hover:bg-slate-100" title="방문자 전용 링크 복사">
-                    <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+                    <i data-lucide="share-2" class="w-3.5 h-3.5 text-indigo-500"></i>
                     <span class="hidden md:inline">공유하기</span>
                 </button>
 
-                <!-- 모드 전환 버튼 -->
+                <!-- 모드 전환 버튼 (비밀번호 보호) -->
                 <button id="mode-toggle" class="flex items-center gap-2 px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-tighter border transition-all dark:border-slate-800 dark:hover:bg-slate-800 border-slate-200 hover:bg-slate-100">
                     <i id="mode-icon" data-lucide="eye" class="w-3.5 h-3.5 text-indigo-500"></i>
                     <span id="mode-text">방문자</span>
                 </button>
 
-                <div class="h-6 w-[1px] bg-slate-800/50 dark:bg-slate-800 light:bg-slate-200 mx-1"></div>
+                <div id="header-divider" class="h-6 w-[1px] bg-slate-800/50 dark:bg-slate-800 light:bg-slate-200 mx-1"></div>
 
-                <!-- 테마 전환 버튼 -->
                 <button id="theme-toggle" class="p-2.5 rounded-xl transition-all border border-transparent hover:border-slate-700/50 hover:bg-slate-800/50 dark:text-slate-400 light:text-slate-600">
                     <i id="theme-icon" data-lucide="sun" class="w-5 h-5"></i>
                 </button>
 
-                <!-- 추가 버튼 (관리자용) -->
                 <button id="header-add-btn" onclick="openAddModal()" class="hidden items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-indigo-500/20 active:scale-95 uppercase tracking-tighter">
                     <i data-lucide="plus" class="w-4 h-4"></i> <span class="hidden md:inline">추가하기</span>
                 </button>
@@ -158,21 +156,21 @@
                 </div>
             </div>
             <p id="footer-text" class="font-bold mb-3 tracking-tight text-slate-300 uppercase">VIBE CODING GAMES</p>
-            <p id="copyright" class="text-[11px] uppercase tracking-[0.3em] text-slate-600 font-black">
+            <p id="copyright" class="text-[11px] uppercase tracking-[0.3em] text-slate-600 font-black text-white dark:text-slate-600 light:text-slate-400">
                 © 2026 Moon Seo-yun all rights reserved.
             </p>
         </div>
     </footer>
 
-    <!-- 모달: 비밀번호 확인 (관리자 모드 접속 시) -->
+    <!-- 모달: 비밀번호 확인 -->
     <div id="password-modal" class="fixed inset-0 z-[70] hidden items-center justify-center p-6">
         <div class="absolute inset-0 bg-slate-950/90 backdrop-blur-lg" onclick="toggleModal('password-modal', false)"></div>
         <div id="password-modal-box" class="relative w-full max-w-sm rounded-[2.5rem] p-10 text-center bg-slate-900 border border-white/10 animate-slide-up">
             <div class="w-16 h-16 bg-indigo-500/10 text-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-8">
                 <i data-lucide="shield-check" class="w-8 h-8 text-white"></i>
             </div>
-            <h3 class="text-2xl font-black mb-2 text-white">관리자 인증</h3>
-            <p class="text-slate-500 mb-8 text-sm">기능을 활성화하려면 비밀번호를 입력하세요.</p>
+            <h3 class="text-2xl font-black mb-2 text-white dark:text-white light:text-slate-900">관리자 인증</h3>
+            <p class="text-slate-500 mb-8 text-sm">편집 권한을 얻으려면 비밀번호를 입력하세요.</p>
             <input type="password" id="admin-password-input" placeholder="••••" class="w-full px-5 py-4 rounded-2xl border-2 outline-none text-center text-xl tracking-[0.5em] transition-all bg-transparent border-slate-800 text-white focus:border-indigo-500 mb-6 font-bold">
             <button id="password-confirm-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-4 rounded-2xl transition-all active:scale-95 uppercase tracking-tighter shadow-lg shadow-indigo-500/20">
                 인증하기
@@ -180,12 +178,12 @@
         </div>
     </div>
 
-    <!-- 모달: 추가 및 수정 -->
+    <!-- 모달: 게임 추가/수정 -->
     <div id="add-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-6">
         <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity" onclick="toggleModal('add-modal', false)"></div>
         <div id="modal-box" class="relative w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden p-10 animate-slide-up bg-slate-900 border border-white/10">
             <div class="flex justify-between items-center mb-12">
-                <h3 id="modal-title" class="text-2xl font-black tracking-tight text-white">새 프로젝트 등록</h3>
+                <h3 id="modal-title" class="text-2xl font-black tracking-tight text-white transition-colors">새 프로젝트 등록</h3>
                 <button onclick="toggleModal('add-modal', false)" class="p-2 rounded-xl hover:bg-slate-800/50 transition-colors">
                     <i data-lucide="x" class="w-6 h-6 text-slate-400"></i>
                 </button>
@@ -219,7 +217,7 @@
                 <i data-lucide="trash-2" class="w-10 h-10"></i>
             </div>
             <h3 id="del-modal-title" class="text-2xl font-bold mb-3 tracking-tight text-white">프로젝트 삭제</h3>
-            <p class="text-slate-500 mb-10 leading-relaxed text-sm">목록에서 영구적으로 제거됩니다.</p>
+            <p class="text-slate-500 mb-10 leading-relaxed text-sm text-slate-400">목록에서 영구적으로 제거됩니다.</p>
             <div class="flex gap-4">
                 <button onclick="toggleModal('delete-modal', false)" class="flex-1 py-4 rounded-2xl font-bold bg-slate-800 text-white hover:bg-slate-700 transition-colors text-sm">취소</button>
                 <button id="confirm-delete-btn" class="flex-1 py-4 rounded-2xl font-bold bg-red-500 text-white hover:bg-red-600 transition-all text-sm">삭제하기</button>
@@ -229,8 +227,8 @@
 
     <script>
         // --- 핵심 설정 ---
-        const ADMIN_PASSWORD = "9823"; // 관리자 비밀번호
-        
+        const ADMIN_PASSWORD = "9823"; // 사용자 요청 비밀번호
+
         const INITIAL_GAMES = [
             {
                 id: "vibe-rush-fixed",
@@ -244,10 +242,11 @@
         let gamesList = [];
         let pendingDeleteId = null;
         let isDarkMode = true;
-        let isOwnerMode = false; // 기본값 방문자 모드
+        let isOwnerMode = false; // 기본 방문자 모드
+        let isForcedVisitor = false; // URL 파라미터 강제 방문자 여부
 
         const loadGames = () => {
-            const saved = localStorage.getItem('vibe_portfolio_final_v5');
+            const saved = localStorage.getItem('vibe_portfolio_secure_v6');
             if (saved) {
                 const savedGames = JSON.parse(saved);
                 const combined = [...INITIAL_GAMES];
@@ -262,7 +261,7 @@
         };
 
         const saveToLocal = () => {
-            localStorage.setItem('vibe_portfolio_final_v5', JSON.stringify(gamesList));
+            localStorage.setItem('vibe_portfolio_secure_v6', JSON.stringify(gamesList));
             renderGames();
         };
 
@@ -283,7 +282,7 @@
             else { modal.classList.add('hidden'); modal.classList.remove('flex'); }
         };
 
-        // 방문자 전용 주소 복사 (공유 버튼)
+        // 방문자 전용 링크 공유 기능
         document.getElementById('share-link-btn').onclick = () => {
             const visitorUrl = window.location.origin + window.location.pathname + "?visitor=true";
             const dummy = document.createElement("input");
@@ -292,14 +291,22 @@
             dummy.select();
             document.execCommand('copy');
             document.body.removeChild(dummy);
-            showToast("방문자용 공유 링크가 복사되었습니다!");
+            showToast("방문자용 전용 공유 링크가 복사되었습니다!");
         };
 
         const updateModeUI = () => {
             const modeIcon = document.getElementById('mode-icon');
             const modeText = document.getElementById('mode-text');
+            const modeToggleBtn = document.getElementById('mode-toggle');
             const headerAddBtn = document.getElementById('header-add-btn');
+            const shareBtn = document.getElementById('share-link-btn');
             const emptyAddBtn = document.getElementById('empty-add-btn');
+
+            // URL 파라미터가 ?visitor=true 인 경우 모드 전환 버튼을 완전히 숨김
+            if (isForcedVisitor) {
+                modeToggleBtn.style.display = "none";
+                shareBtn.style.display = "none"; // 방문자는 공유 버튼도 안보이게 처리 가능
+            }
 
             if (isOwnerMode) {
                 modeIcon.setAttribute('data-lucide', 'lock');
@@ -319,7 +326,6 @@
             lucide.createIcons();
         };
 
-        // 모드 전환 로직
         document.getElementById('mode-toggle').onclick = () => {
             if (isOwnerMode) {
                 isOwnerMode = false;
@@ -344,7 +350,7 @@
             }
         };
 
-        // 전체 사이트 테마 토글 (연동 강화)
+        // 전체 테마 토글 (색상 동기화 로직)
         document.getElementById('theme-toggle').onclick = () => {
             isDarkMode = !isDarkMode;
             const body = document.body;
@@ -358,6 +364,7 @@
             const title = document.getElementById('main-title');
             const subtitle = document.getElementById('hero-subtitle');
             const icon = document.getElementById('theme-icon');
+            const copy = document.getElementById('copyright');
 
             if (isDarkMode) {
                 body.className = "dark bg-slate-950 text-slate-100 min-h-screen";
@@ -375,6 +382,7 @@
                 title.className = "text-5xl md:text-8xl font-black mb-8 tracking-tighter leading-[0.9] neon-text uppercase text-white transition-all duration-300";
                 subtitle.className = "text-lg md:text-xl font-medium text-slate-400 max-w-xl mx-auto leading-relaxed";
                 icon.setAttribute('data-lucide', 'sun');
+                copy.className = "text-[11px] uppercase tracking-[0.3em] text-slate-600 font-black";
             } else {
                 body.className = "light bg-slate-50 text-slate-900 min-h-screen";
                 header.className = "sticky top-0 z-40 w-full border-b backdrop-blur-xl transition-colors duration-300 border-slate-200 bg-white/80";
@@ -391,6 +399,7 @@
                 title.className = "text-5xl md:text-8xl font-black mb-8 tracking-tighter leading-[0.9] uppercase text-slate-900 transition-all duration-300";
                 subtitle.className = "text-lg md:text-xl font-medium text-slate-600 max-w-xl mx-auto leading-relaxed";
                 icon.setAttribute('data-lucide', 'moon');
+                copy.className = "text-[11px] uppercase tracking-[0.3em] text-slate-400 font-black";
             }
             lucide.createIcons();
             renderGames();
@@ -492,7 +501,7 @@
                 const idx = gamesList.findIndex(g => g.id === id);
                 if (idx !== -1) {
                     gamesList[idx] = { ...gamesList[idx], title, url, description };
-                    showToast("성공적으로 수정되었습니다.");
+                    showToast("수정 완료");
                 }
             } else {
                 const newGame = {
@@ -501,7 +510,7 @@
                     createdAt: new Date().toISOString()
                 };
                 gamesList.unshift(newGame);
-                showToast("새 프로젝트가 등록되었습니다!");
+                showToast("새 프로젝트 등록 완료");
             }
             saveToLocal();
             toggleModal('add-modal', false);
@@ -510,9 +519,14 @@
 
         // 초기화
         window.onload = () => {
-            // URL 파라미터가 ?visitor=true면 강제로 방문자 모드 고정
+            // URL 파라미터 체크
             const params = new URLSearchParams(window.location.search);
-            isOwnerMode = params.get('visitor') === 'true' ? false : false; // 기본 방문자
+            if (params.get('visitor') === 'true') {
+                isForcedVisitor = true;
+                isOwnerMode = false;
+            } else {
+                isOwnerMode = false; // 기본은 여전히 방문자 모드로 시작
+            }
             
             loadGames();
             updateModeUI();
